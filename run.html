@@ -1320,7 +1320,7 @@ function buildDays() {
     const card = document.createElement('div');
     card.className = 'day-card' + (open ? ' open' : '');
     card.style.borderColor = open ? t.color + '55' : '';
-    card.onclick = () => { openDate = open ? null : e.date; buildDays(); };
+    card.onclick = (ev) => { if (ev.target.tagName === 'A') return; openDate = open ? null : e.date; buildDays(); };
 
     const badges = (e.file ? '<span class="badge zwo-badge">⚡ .zwo</span>' : '') +
                    (isNor  ? '<span class="badge nor-badge">◆ NOR 4×4</span>' : '') +
@@ -1347,7 +1347,7 @@ function buildDays() {
         <div class="day-info">
           <div class="day-name-row">
             <span class="day-abbr">${e.day}</span>
-            <span class="day-label">${e.label}</span>
+            <span class="day-label">${e.type === 'strength' ? `<a href="workout.html" style="color:inherit;text-decoration:underline;text-underline-offset:2px;text-decoration-color:#4b5563">${e.label}</a>` : e.label}</span>
             ${badges}
           </div>
           <div class="day-summary">${e.summary}</div>
