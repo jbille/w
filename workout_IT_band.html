@@ -2,184 +2,623 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Weekly Plan (Run + Knee + IT Band Syndrome Focus + Lower Back)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <title>Weekly Strength Plan</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 1100px; margin: 0 auto; }
-    h1, h2 { margin: 0 0 12px; }
-    .note { background: #fff7e6; border: 1px solid #ffd89a; padding: 12px 14px; border-radius: 8px; margin: 12px 0 18px; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 18px; }
-    th, td { border: 1px solid #ccc; padding: 10px; vertical-align: top; }
-    th { background: #f5f5f5; text-align: left; }
-    ul { margin: 6px 0 0; padding-left: 20px; }
-    a { color: #065fd4; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #eef2ff; border: 1px solid #c7d2fe; margin-left: 6px; }
-    .muted { color: #666; }
-    .rules li { margin-bottom: 6px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f7f4;
+      --surface: #ffffff;
+      --border: #e5e0d8;
+      --border2: #ece8e0;
+      --text: #1a1714;
+      --text2: #4a4540;
+      --text3: #7a756e;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --blue: #1d4ed8;
+      --blue-bg: #eff6ff;
+      --blue-border: #bfdbfe;
+      --green: #15803d;
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
+      --red: #b91c1c;
+      --tag-bg: #f0f0ec;
+      --tag-border: #d8d4cb;
+    }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: var(--text);
+      color: #f9f7f4;
+      padding: 20px 16px 18px;
+    }
+
+    .page-header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .page-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #a09890;
+      margin-bottom: 4px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .page-title {
+      font-size: clamp(18px, 5vw, 26px);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: #a09890;
+      margin-top: 4px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 12px 48px;
+    }
+
+    @media (min-width: 600px) {
+      .page-header { padding: 24px 24px 20px; }
+      .main { padding: 20px 24px 56px; }
+    }
+
+    /* ── ALERT BOXES ── */
+    .alert {
+      padding: 12px 14px;
+      border-radius: 9px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.55;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .alert-amber {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: #78350f;
+    }
+
+    .alert-amber strong { color: var(--amber); }
+
+    .alert-green {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      color: #14532d;
+    }
+
+    .alert-green strong { color: var(--green); }
+
+    .alert .muted {
+      font-size: 12px;
+      color: #92400e;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ── RULES SECTION ── */
+    .rules-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+
+    .rules-title {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 99px;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      letter-spacing: 0;
+    }
+
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rules-list li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 13px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    .rules-list li::before {
+      content: "—";
+      color: var(--red);
+      flex-shrink: 0;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .rules-list li strong { color: var(--text); }
+
+    /* ── SECTION HEADING ── */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 20px 0 8px;
+    }
+
+    /* ── DAY CARDS ── */
+    .day-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      min-height: 56px;
+    }
+
+    .day-header:active { background: var(--bg); }
+
+    .day-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .day-header-text { flex: 1; min-width: 0; }
+
+    .day-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .day-subtitle {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 1px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .day-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .badge-run { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .badge-strength { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+    .badge-rest { background: var(--tag-bg); color: var(--text3); border: 1px solid var(--tag-border); }
+
+    .day-arrow {
+      font-size: 9px;
+      color: var(--text3);
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .day-card.open .day-arrow { transform: rotate(180deg); }
+
+    /* ── DAY BODY ── */
+    .day-body {
+      border-top: 1px solid var(--border2);
+      padding: 14px 14px 16px;
+      display: none;
+    }
+
+    .day-card.open .day-body { display: block; }
+
+    /* ── EXERCISE GROUPS ── */
+    .ex-group {
+      margin-bottom: 14px;
+    }
+
+    .ex-group:last-child { margin-bottom: 0; }
+
+    .ex-group-title {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 8px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    /* ── EXERCISE ITEMS ── */
+    .ex-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .ex-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .ex-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .ex-content { flex: 1; min-width: 0; }
+
+    .ex-link {
+      font-size: 14px;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.3;
+      display: block;
+    }
+
+    .ex-link:hover { text-decoration: underline; }
+
+    .ex-dose {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 2px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .ex-dose strong { color: var(--text2); }
+
+    /* ── PLAIN TEXT DAY ── */
+    .day-plain {
+      font-size: 13px;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: italic;
+    }
+
+    /* ── SAFE AREA ── */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .main { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
+    }
   </style>
 </head>
 <body>
-  <h1>Weekly Plan (Run + Knee + IT Band Syndrome Focus + Lower Back)</h1>
 
-  <div class="note">
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">Strength &amp; Mobility</div>
+    <div class="page-title">Weekly Workout Plan</div>
+    <div class="page-subtitle">Knee · IT Band Syndrome · Lower Back</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="alert alert-amber">
     <strong>ITBS Focus:</strong> Emphasis on <em>single-leg control</em> and reduced TFL dominance.
-    <br/>
     <span class="muted">If an exercise causes next-day hip/TFL soreness, reduce volume or remove it.</span>
   </div>
 
-  <h2>Weekly Rules <span class="tag">Important</span></h2>
-  <ul class="rules">
-    <li><strong>No high-volume lateral band work before runs.</strong></li>
-    <li><strong>Strength should not cause lingering soreness.</strong></li>
-    <li><strong>Avoid aggressive IT band rolling near the knee.</strong></li>
-  </ul>
-
-  <table>
-    <thead>
-      <tr><th style="width: 120px;">Day</th><th style="width: 280px;">Activity</th><th>Details</th></tr>
-    </thead>
-    <tbody>
-
-      <!-- SUNDAY -->
-      <tr>
-        <td><strong>Sunday</strong></td>
-        <td>Run</td>
-        <td class="muted">Run as planned.</td>
-      </tr>
-
-      <!-- MONDAY -->
-      <tr>
-        <td><strong>Monday</strong></td>
-        <td>Run + Knee + ITBS Control + Lower Back</td>
-        <td>
-          <strong>Warm-Up:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a> – 2×10</li>
-            <li><a href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank" rel="noopener">Leg Swings (front/back)</a> – 10/side</li>
-          </ul>
-
-          <strong>ITBS / Knee Strength:</strong>
-          <ul>
-            <li>
-              <a href="https://www.youtube.com/watch?v=DuE_ScvXwtg" target="_blank" rel="noopener">
-                Single-Leg Squat to Box (Single-Leg Box Squat)
-              </a>
-              – 3×6–8/side (slow 3–4 sec descent)
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=gDE83dy8mNA" target="_blank" rel="noopener">
-                Step-Downs (Forward Step Down)
-              </a>
-              – 3×6/side (use a 6–8" step)
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=7xG3MeoLjC0" target="_blank" rel="noopener">
-                Terminal Knee Extensions (TKE)
-              </a>
-              – 3×15/leg
-            </li>
-          </ul>
-
-          <strong>Lower Back:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=NO-NevrDrjE" target="_blank" rel="noopener">Banded Pull-Through</a> – 3×10–12</li>
-          </ul>
-        </td>
-      </tr>
-
-      <!-- TUESDAY -->
-      <tr>
-        <td><strong>Tuesday</strong></td>
-        <td>Rest</td>
-        <td class="muted">Optional light mobility or walking.</td>
-      </tr>
-
-      <!-- WEDNESDAY -->
-      <tr>
-        <td><strong>Wednesday</strong></td>
-        <td>Run</td>
-        <td class="muted">Run as planned.</td>
-      </tr>
-
-      <!-- THURSDAY -->
-      <tr>
-        <td><strong>Thursday</strong></td>
-        <td>Adductors &amp; Hamstrings + ITBS Support</td>
-        <td>
-          <strong>Strength:</strong>
-          <ul>
-            <li>
-              <a href="https://www.youtube.com/watch?v=yByUFuQsgCg" target="_blank" rel="noopener">
-                Copenhagen Side Plank (Modified)
-              </a>
-              – 2×10–15s/side
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=7j-2w4-P14I" target="_blank" rel="noopener">
-                Romanian Deadlift
-              </a>
-              – 3×10
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=H2pUksSo7Iw" target="_blank" rel="noopener">
-                Stability Ball Hamstring Curl (Eccentric)
-              </a>
-              – 3×8
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=s8Hh8UI0l_Q" target="_blank" rel="noopener">
-                Side Plank (Knees Bent)
-              </a>
-              – 2×20–30s/side
-            </li>
-          </ul>
-        </td>
-      </tr>
-
-      <!-- FRIDAY -->
-      <tr>
-        <td><strong>Friday</strong></td>
-        <td>Run</td>
-        <td class="muted">Run as planned.</td>
-      </tr>
-
-      <!-- SATURDAY -->
-      <tr>
-        <td><strong>Saturday</strong></td>
-        <td>Glute Medius &amp; ITBS Control</td>
-        <td>
-          <strong>Strength &amp; Control:</strong>
-          <ul>
-            <li>
-              <a href="https://www.youtube.com/watch?v=iTdhzEwvuc8" target="_blank" rel="noopener">
-                Hip Airplanes (Supported)
-              </a>
-              – 3×5/side
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank" rel="noopener">
-                Single-Leg RDL
-              </a>
-              – 3×6–8/side
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=s8Hh8UI0l_Q" target="_blank" rel="noopener">
-                Side Plank (Knees Bent)
-              </a>
-              – 2×20–30s/side
-            </li>
-          </ul>
-        </td>
-      </tr>
-
-    </tbody>
-  </table>
-
-  <div class="note">
-    <strong>Progression Rule:</strong>
-    Progress only when you can complete a full week of running with <em>no IT band symptoms</em>.
-    Increase <strong>one variable at a time</strong> (reps, load, or step height).
+  <div class="rules-card">
+    <div class="rules-title">Weekly Rules <span class="tag">Important</span></div>
+    <ul class="rules-list">
+      <li><strong>No high-volume lateral band work before runs.</strong></li>
+      <li><strong>Strength should not cause lingering soreness.</strong></li>
+      <li><strong>Avoid aggressive IT band rolling near the knee.</strong></li>
+    </ul>
   </div>
+
+  <div class="section-label">Daily Schedule — tap to expand</div>
+
+  <!-- SUNDAY -->
+  <div class="day-card" id="day-sun">
+    <div class="day-header" onclick="toggle('day-sun')">
+      <div class="day-dot" style="background:#6b7280"></div>
+      <div class="day-header-text">
+        <div class="day-name">Sunday</div>
+        <div class="day-subtitle">Long run</div>
+      </div>
+      <span class="day-badge badge-run">Run</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Run as planned.</p>
+    </div>
+  </div>
+
+  <!-- MONDAY -->
+  <div class="day-card" id="day-mon">
+    <div class="day-header" onclick="toggle('day-mon')">
+      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-header-text">
+        <div class="day-name">Monday</div>
+        <div class="day-subtitle">Run + Knee + ITBS + Lower Back</div>
+      </div>
+      <span class="day-badge badge-strength">Strength</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+
+      <div class="ex-group">
+        <div class="ex-group-title">Warm-Up</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
+            <div class="ex-dose"><strong>2×10</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank" rel="noopener">Leg Swings (front/back)</a>
+            <div class="ex-dose"><strong>10/side</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group">
+        <div class="ex-group-title">ITBS / Knee Strength</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=DuE_ScvXwtg" target="_blank" rel="noopener">Single-Leg Box Squat</a>
+            <div class="ex-dose"><strong>3×6–8/side</strong> · slow 3–4 sec descent</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=gDE83dy8mNA" target="_blank" rel="noopener">Step-Downs (Forward)</a>
+            <div class="ex-dose"><strong>3×6/side</strong> · use a 6–8" step</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=7xG3MeoLjC0" target="_blank" rel="noopener">Terminal Knee Extensions (TKE)</a>
+            <div class="ex-dose"><strong>3×15/leg</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group">
+        <div class="ex-group-title">Lower Back</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=NO-NevrDrjE" target="_blank" rel="noopener">Banded Pull-Through</a>
+            <div class="ex-dose"><strong>3×10–12</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TUESDAY -->
+  <div class="day-card" id="day-tue">
+    <div class="day-header" onclick="toggle('day-tue')">
+      <div class="day-dot" style="background:#9ca3af"></div>
+      <div class="day-header-text">
+        <div class="day-name">Tuesday</div>
+        <div class="day-subtitle">Rest day</div>
+      </div>
+      <span class="day-badge badge-rest">Rest</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Optional light mobility or walking.</p>
+    </div>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="day-card" id="day-wed">
+    <div class="day-header" onclick="toggle('day-wed')">
+      <div class="day-dot" style="background:#2563eb"></div>
+      <div class="day-header-text">
+        <div class="day-name">Wednesday</div>
+        <div class="day-subtitle">Workout run</div>
+      </div>
+      <span class="day-badge badge-run">Run</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Run as planned.</p>
+    </div>
+  </div>
+
+  <!-- THURSDAY -->
+  <div class="day-card" id="day-thu">
+    <div class="day-header" onclick="toggle('day-thu')">
+      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-header-text">
+        <div class="day-name">Thursday</div>
+        <div class="day-subtitle">Adductors &amp; Hamstrings + ITBS Support</div>
+      </div>
+      <span class="day-badge badge-strength">Strength</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+
+      <div class="ex-group">
+        <div class="ex-group-title">Strength</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=yByUFuQsgCg" target="_blank" rel="noopener">Copenhagen Side Plank (Modified)</a>
+            <div class="ex-dose"><strong>2×10–15s/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=7j-2w4-P14I" target="_blank" rel="noopener">Romanian Deadlift</a>
+            <div class="ex-dose"><strong>3×10</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=H2pUksSo7Iw" target="_blank" rel="noopener">Stability Ball Hamstring Curl (Eccentric)</a>
+            <div class="ex-dose"><strong>3×8</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">4</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=s8Hh8UI0l_Q" target="_blank" rel="noopener">Side Plank (Knees Bent)</a>
+            <div class="ex-dose"><strong>2×20–30s/side</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FRIDAY -->
+  <div class="day-card" id="day-fri">
+    <div class="day-header" onclick="toggle('day-fri')">
+      <div class="day-dot" style="background:#2563eb"></div>
+      <div class="day-header-text">
+        <div class="day-name">Friday</div>
+        <div class="day-subtitle">Easy run</div>
+      </div>
+      <span class="day-badge badge-run">Run</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Run as planned.</p>
+    </div>
+  </div>
+
+  <!-- SATURDAY -->
+  <div class="day-card" id="day-sat">
+    <div class="day-header" onclick="toggle('day-sat')">
+      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-header-text">
+        <div class="day-name">Saturday</div>
+        <div class="day-subtitle">Glute Medius &amp; ITBS Control</div>
+      </div>
+      <span class="day-badge badge-strength">Strength</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+
+      <div class="ex-group">
+        <div class="ex-group-title">Strength &amp; Control</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=iTdhzEwvuc8" target="_blank" rel="noopener">Hip Airplanes (Supported)</a>
+            <div class="ex-dose"><strong>3×5/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank" rel="noopener">Single-Leg RDL</a>
+            <div class="ex-dose"><strong>3×6–8/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=s8Hh8UI0l_Q" target="_blank" rel="noopener">Side Plank (Knees Bent)</a>
+            <div class="ex-dose"><strong>2×20–30s/side</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="alert alert-green" style="margin-top:16px">
+    <strong>Progression Rule:</strong> Progress only when you can complete a full week of running with <em>no IT band symptoms</em>. Increase <strong>one variable at a time</strong> — reps, load, or step height.
+  </div>
+
+</div>
+
+<script>
+  function toggle(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+  // Auto-open today's day
+  const days = ['day-sun','day-mon','day-tue','day-wed','day-thu','day-fri','day-sat'];
+  const today = new Date().getDay(); // 0=Sun
+  const el = document.getElementById(days[today]);
+  if (el) el.classList.add('open');
+</script>
+
 </body>
 </html>
