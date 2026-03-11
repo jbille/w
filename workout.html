@@ -1,159 +1,751 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Weekly Knee Tendinitis + Lower Back Additions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <title>Weekly Knee + IT Band Prevention Plan</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
-    th, td { border: 1px solid #ccc; padding: 10px; vertical-align: top; }
-    th { background: #f5f5f5; }
-    ul { margin: 0; padding-left: 20px; }
-    a { color: #065fd4; text-decoration: none; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f7f4;
+      --surface: #ffffff;
+      --border: #e5e0d8;
+      --border2: #ece8e0;
+      --text: #1a1714;
+      --text2: #4a4540;
+      --text3: #7a756e;
+      --blue: #1d4ed8;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --purple: #7c3aed;
+      --gray: #6b7280;
+      --run-blue: #2563eb;
+    }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: var(--text);
+      color: #f9f7f4;
+      padding: 20px 16px 18px;
+    }
+
+    .page-header-inner { max-width: 760px; margin: 0 auto; }
+
+    .page-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #a09890;
+      margin-bottom: 4px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .page-title {
+      font-size: clamp(17px, 4.5vw, 24px);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: #a09890;
+      margin-top: 5px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.5;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px 12px 52px;
+    }
+
+    @media (min-width: 600px) {
+      .page-header { padding: 24px 24px 20px; }
+      .main { padding: 18px 24px 56px; }
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 16px 0 8px;
+    }
+
+    /* ── DAY CARDS ── */
+    .day-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 7px;
+      overflow: hidden;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 13px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      min-height: 56px;
+      transition: background 0.1s;
+    }
+
+    .day-header:active { background: var(--bg); }
+
+    .day-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .day-header-text { flex: 1; min-width: 0; }
+
+    .day-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .day-subtitle {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 1px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .day-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .badge-run    { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .badge-str    { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+    .badge-rest   { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+
+    .day-arrow {
+      font-size: 9px;
+      color: var(--text3);
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .day-card.open .day-arrow { transform: rotate(180deg); }
+
+    /* ── DAY BODY ── */
+    .day-body {
+      border-top: 1px solid var(--border2);
+      padding: 13px 13px 16px;
+      display: none;
+    }
+
+    .day-card.open .day-body { display: block; }
+
+    /* ── EXERCISE GROUPS ── */
+    .ex-group { margin-bottom: 14px; }
+    .ex-group:last-child { margin-bottom: 0; }
+
+    .ex-group-title {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 7px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    /* ── EXERCISE ITEMS ── */
+    .ex-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .ex-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .ex-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .ex-content { flex: 1; min-width: 0; }
+
+    .ex-link {
+      font-size: 14px;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.35;
+      display: inline;
+    }
+
+    .ex-link:hover { text-decoration: underline; }
+
+    .ex-dose {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 2px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.4;
+    }
+
+    .ex-dose strong { color: var(--text2); }
+    .ex-dose .muted { color: var(--text3); font-style: italic; }
+
+    /* ── FINISHER BOX ── */
+    .finisher-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 2px;
+    }
+
+    .finisher-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #92400e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 7px;
+    }
+
+    /* ── PLAIN TEXT ── */
+    .day-plain {
+      font-size: 13px;
+      color: var(--text3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: italic;
+    }
+
+    /* ── SAFE AREA ── */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .main { padding-bottom: calc(52px + env(safe-area-inset-bottom)); }
+    }
   </style>
 </head>
 <body>
-  <h1>Weekly Knee Tendinitis Plan (with Lower Back Additions)</h1>
 
-  <table>
-    <thead>
-      <tr><th>Day</th><th>Activity</th><th>Details</th></tr>
-    </thead>
-    <tbody>
-      <!-- SUNDAY -->
-      <tr>
-        <td>Sunday</td>
-        <td>Run</td>
-        <td></td>
-      </tr>
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">Strength &amp; Mobility</div>
+    <div class="page-title">Weekly Knee + IT Band Prevention Plan</div>
+    <div class="page-subtitle">Goal: IT-band "insurance" — pelvic control + knee tracking under fatigue so mile 18–22 mechanics don't fall apart.</div>
+  </div>
+</div>
 
-      <!-- MONDAY -->
-      <tr>
-        <td>Monday</td>
-        <td>Run + Glutes &amp; VMO (Knee) + Lower Back &amp; Calves</td>
-        <td>
-          <strong>Warm-Up (knee-friendly):</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank">Glute Bridges</a> – 2×10</li>
-            <li><a href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank">Leg Swings (front/back)</a> – 10/side</li>
-            <li><a href="https://www.youtube.com/watch?v=ESmDtnFmK0o" target="_blank">Lateral Band Walks</a> – 2×10 each way</li>
-          </ul>
+<div class="main">
 
-          <strong>Knee Strength:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank">Single-Leg Toe Touch</a> – 3×8/side</li>
-            <li><a href="https://www.youtube.com/watch?v=ESmDtnFmK0o" target="_blank">Band Side-Stepping</a> – 3×10 each way</li>
-            <li><a href="https://www.youtube.com/watch?v=-gjHtEVSxc8" target="_blank">Standing Hip Adduction (ankle band pull straight out)</a> – 3×12/leg</li>
-            <li><a href="https://www.youtube.com/watch?v=7xG3MeoLjC0" target="_blank">Terminal Knee Extensions (TKE)</a> – 3×15/leg</li>
-            <li><a href="https://www.youtube.com/watch?v=Yr4VIVYWp10" target="_blank">Spanish Squat</a> – 3×10 (2-sec hold)</li>
-          </ul>
+  <div class="section-label">Daily Schedule — tap to expand</div>
 
-          <strong>Lower Back (added):</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=NO-NevrDrjE" target="_blank">Banded Pull-Through</a> – 3×10–12 (hinge; glutes/hamstrings/lumbar)</li>
-          </ul>
+  <!-- SUNDAY -->
+  <div class="day-card" id="day-sun">
+    <div class="day-header" onclick="toggle('day-sun')">
+      <div class="day-dot" style="background:#6b7280"></div>
+      <div class="day-header-text">
+        <div class="day-name">Sunday</div>
+        <div class="day-subtitle">Long run</div>
+      </div>
+      <span class="day-badge badge-run">Run</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Run as planned.</p>
+    </div>
+  </div>
 
-          <strong>Accessory (added):</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=k8ipHzKeAkQ" target="_blank">Standing Calf Raises</a> – 3×12–15</li>
-          </ul>
+  <!-- MONDAY -->
+  <div class="day-card" id="day-mon">
+    <div class="day-header" onclick="toggle('day-mon')">
+      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-header-text">
+        <div class="day-name">Monday</div>
+        <div class="day-subtitle">Run + Glutes &amp; Knee + IT Band + Lower Back &amp; Calves</div>
+      </div>
+      <span class="day-badge badge-str">Strength</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
 
-          <strong>Cool-Down:</strong>
-          <ul>
-            <li>Quad + hamstring stretch – 2×30s each</li>
-            <li>Foam roll quads &amp; inner thigh – 2–3 min</li>
-          </ul>
-        </td>
-      </tr>
+      <div class="ex-group">
+        <div class="ex-group-title">Warm-Up</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
+            <div class="ex-dose"><strong>2×10</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank" rel="noopener">Leg Swings (front/back)</a>
+            <div class="ex-dose"><strong>10/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=6eoK_yxY8Ak" target="_blank" rel="noopener">Lateral Band Walks</a>
+            <div class="ex-dose"><strong>2×10</strong> each way</div>
+          </div>
+        </div>
+      </div>
 
-      <!-- TUESDAY -->
-      <tr>
-        <td>Tuesday</td>
-        <td>Rest</td>
-        <td></td>
-      </tr>
+      <div class="ex-group">
+        <div class="ex-group-title">Strength</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=DuE_ScvXwtg" target="_blank" rel="noopener">Single-Leg Squat to Box</a>
+            <div class="ex-dose"><strong>3×6/side</strong> <span class="muted">· raise box to make pain-free</span></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank" rel="noopener">Single-Leg Toe Touch</a>
+            <div class="ex-dose"><strong>3×8/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=gDE83dy8mNA" target="_blank" rel="noopener">Forward Step-Down</a>
+            <div class="ex-dose"><strong>3×6–8/side</strong> · 6–8" step</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">4</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=7xG3MeoLjC0" target="_blank" rel="noopener">Terminal Knee Extensions (TKE)</a>
+            <div class="ex-dose"><strong>3×15/leg</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">5</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=Yr4VIVYWp10" target="_blank" rel="noopener">Spanish Squat</a>
+            <div class="ex-dose"><strong>3×10</strong> · 2-sec hold</div>
+          </div>
+        </div>
+      </div>
 
-      <!-- WEDNESDAY -->
-      <tr>
-        <td>Wednesday</td>
-        <td>Run</td>
-        <td></td>
-      </tr>
+      <div class="ex-group">
+        <div class="ex-group-title">Lower Back</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=RZ4HyxZBAdQ" target="_blank" rel="noopener">Banded Pull-Through</a>
+            <div class="ex-dose"><strong>3×10–12</strong></div>
+          </div>
+        </div>
+      </div>
 
-      <!-- THURSDAY -->
-      <tr>
-        <td>Thursday</td>
-        <td>Adductors &amp; Hamstrings (Knee) + Lower Back</td>
-        <td>
-          <strong>Warm-Up:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank">Leg Swings (front/back &amp; side/side)</a> – 10 each direction</li>
-            <li><a href="https://www.youtube.com/watch?v=ESmDtnFmK0o" target="_blank">Mini Band Lateral Walk</a> – 1–2×10 each way</li>
-            <li><a href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank">Glute Bridges</a> – 2×10</li>
-          </ul>
+      <div class="ex-group">
+        <div class="ex-group-title">Accessory</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=k8ipHzKeAkQ" target="_blank" rel="noopener">Standing Calf Raises</a>
+            <div class="ex-dose"><strong>3×12–15</strong></div>
+          </div>
+        </div>
+      </div>
 
-          <strong>Knee Strength:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=yByUFuQsgCg" target="_blank">Copenhagen Side Plank (modified)</a> – 2×10–15s/side</li>
-            <li><a href="https://www.youtube.com/watch?v=7j-2w4-P14I" target="_blank">Romanian Deadlift</a> – 3×10 (light DB/KB ok)</li>
-            <li><a href="https://www.youtube.com/watch?v=H2pUksSo7Iw" target="_blank">Eccentric Hamstring Curl (stability ball)</a> – 3×8</li>
-            <li><a href="https://www.youtube.com/watch?v=-gjHtEVSxc8" target="_blank">Standing Hip Adduction (soccer kick)</a> – 3×10/leg</li>
-            <li><a href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank">Single-Leg Glute Bridge</a> – 2×10/leg</li>
-          </ul>
+      <div class="finisher-box">
+        <div class="finisher-title">⚡ 5-Min Fatigue-Stability Finisher — pick ONE day: Monday OR Thursday</div>
+        <div class="ex-item" style="border-bottom:1px solid #fde68a">
+          <div class="ex-num" style="background:#fff7e6;border-color:#fde68a">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=3OwttGWEOB8" target="_blank" rel="noopener">Hip Hike</a>
+            <div class="ex-dose"><strong>2×12/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item" style="border-bottom:1px solid #fde68a">
+          <div class="ex-num" style="background:#fff7e6;border-color:#fde68a">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=gDE83dy8mNA" target="_blank" rel="noopener">Forward Step-Down</a>
+            <div class="ex-dose"><strong>2×8/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item" style="border-bottom:none;padding-bottom:0">
+          <div class="ex-num" style="background:#fff7e6;border-color:#fde68a">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=Z9_ThjKQyOg" target="_blank" rel="noopener">Single-Leg Balance Hold</a>
+            <div class="ex-dose"><strong>30s/side</strong> · repeat circuit 2×, ~5 min total</div>
+          </div>
+        </div>
+      </div>
 
-          <strong>Lower Back (added):</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=8Oi7mPXsppg" target="_blank">Stability Ball Back Extension</a> – 3×10–12 (control; neutral neck)</li>
-          </ul>
+      <div class="ex-group" style="margin-top:14px">
+        <div class="ex-group-title">Cool-Down</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <div class="ex-link" style="color:var(--text2);cursor:default">Quad + hamstring stretch</div>
+            <div class="ex-dose"><strong>2×30s</strong> each</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <div class="ex-link" style="color:var(--text2);cursor:default">Foam roll quads &amp; glutes</div>
+            <div class="ex-dose"><strong>2–3 min</strong></div>
+          </div>
+        </div>
+      </div>
 
-          <strong>Cool-Down:</strong>
-          <ul>
-            <li>Adductor + hamstring stretch – 2×30s each</li>
-            <li>Foam roll inner thigh &amp; hamstrings – 2–3 min</li>
-          </ul>
-        </td>
-      </tr>
+    </div>
+  </div>
 
-      <!-- FRIDAY -->
-      <tr>
-        <td>Friday</td>
-        <td>Run</td>
-        <td></td>
-      </tr>
+  <!-- TUESDAY -->
+  <div class="day-card" id="day-tue">
+    <div class="day-header" onclick="toggle('day-tue')">
+      <div class="day-dot" style="background:#9ca3af"></div>
+      <div class="day-header-text">
+        <div class="day-name">Tuesday</div>
+        <div class="day-subtitle">Rest day</div>
+      </div>
+      <span class="day-badge badge-rest">Rest</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Full rest.</p>
+    </div>
+  </div>
 
-      <!-- SATURDAY -->
-      <tr>
-        <td>Saturday</td>
-        <td>Glute Medius &amp; Balance (Knee) + Lower Back</td>
-        <td>
-          <strong>Warm-Up:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=2Pkp3k1F45s" target="_blank">Mini Band Lateral Walk</a> – 2×10 each way</li>
-            <li><a href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank">Side Leg Swings</a> – 10/side</li>
-            <li><a href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank">Glute Bridges</a> – 2×10</li>
-          </ul>
+  <!-- WEDNESDAY -->
+  <div class="day-card" id="day-wed">
+    <div class="day-header" onclick="toggle('day-wed')">
+      <div class="day-dot" style="background:#2563eb"></div>
+      <div class="day-header-text">
+        <div class="day-name">Wednesday</div>
+        <div class="day-subtitle">Workout run</div>
+      </div>
+      <span class="day-badge badge-run">Run</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Run as planned.</p>
+    </div>
+  </div>
 
-          <strong>Knee Strength:</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=H3r8R7GJ3pI" target="_blank">Clamshells (with band)</a> – 3×15/side</li>
-            <li><a href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank">Single-Leg RDL</a> – 3×8/leg</li>
-            <li><a href="https://www.youtube.com/watch?v=BzeSd1aycCw" target="_blank">Star Balance Reach</a> – 2×5/leg</li>
-            <li><a href="https://www.youtube.com/watch?v=edTXNT-etYc" target="_blank">Side Plank with Top-Leg Raise</a> – 2×10/side</li>
-          </ul>
+  <!-- THURSDAY -->
+  <div class="day-card" id="day-thu">
+    <div class="day-header" onclick="toggle('day-thu')">
+      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-header-text">
+        <div class="day-name">Thursday</div>
+        <div class="day-subtitle">Adductors &amp; Hamstrings + Hip Stability + Lower Back</div>
+      </div>
+      <span class="day-badge badge-str">Strength</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
 
-          <strong>Lower Back (added):</strong>
-          <ul>
-            <li><a href="https://www.youtube.com/watch?v=JENidBlddKw" target="_blank">Kettlebell Good Morning</a> – 3×10 (light; hinge pattern)</li>
-          </ul>
+      <div class="ex-group">
+        <div class="ex-group-title">Warm-Up</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank" rel="noopener">Leg Swings (front/back &amp; side/side)</a>
+            <div class="ex-dose"><strong>10</strong> each direction</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=6eoK_yxY8Ak" target="_blank" rel="noopener">Mini Band Lateral Walk</a>
+            <div class="ex-dose"><strong>1–2×10</strong> each way</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
+            <div class="ex-dose"><strong>2×10</strong></div>
+          </div>
+        </div>
+      </div>
 
-          <strong>Cool-Down:</strong>
-          <ul>
-            <li>Piriformis + lateral hip stretch – 2×30s/side</li>
-            <li>Foam roll glutes &amp; IT band – 2–3 min</li>
-          </ul>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <div class="ex-group">
+        <div class="ex-group-title">Strength</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=yByUFuQsgCg" target="_blank" rel="noopener">Copenhagen Side Plank (modified)</a>
+            <div class="ex-dose"><strong>2×10–15s/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=7j-2w4-P14I" target="_blank" rel="noopener">Romanian Deadlift</a>
+            <div class="ex-dose"><strong>3×10</strong> · light DB/KB ok</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=XkESHgkTdFw" target="_blank" rel="noopener">Swiss Ball Hamstring Curl</a>
+            <div class="ex-dose"><strong>3×8</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">4</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=iTdhzEwvuc8" target="_blank" rel="noopener">Supported Hip Airplanes</a>
+            <div class="ex-dose"><strong>3×5/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">5</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=3OwttGWEOB8" target="_blank" rel="noopener">Hip Hike</a>
+            <div class="ex-dose"><strong>2×10/side</strong> · slow and controlled</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">6</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Single-Leg Glute Bridge</a>
+            <div class="ex-dose"><strong>2×10/leg</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group">
+        <div class="ex-group-title">Lower Back</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=2m1CQ5VWmGI" target="_blank" rel="noopener">Stability Ball Back Extension</a>
+            <div class="ex-dose"><strong>3×10–12</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="finisher-box">
+        <div class="finisher-title">⚡ Optional Finisher — if you didn't do it Monday</div>
+        <div class="ex-item" style="border-bottom:1px solid #fde68a">
+          <div class="ex-num" style="background:#fff7e6;border-color:#fde68a">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=3OwttGWEOB8" target="_blank" rel="noopener">Hip Hike</a>
+            <div class="ex-dose"><strong>2×12/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item" style="border-bottom:1px solid #fde68a">
+          <div class="ex-num" style="background:#fff7e6;border-color:#fde68a">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=gDE83dy8mNA" target="_blank" rel="noopener">Forward Step-Down</a>
+            <div class="ex-dose"><strong>2×8/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item" style="border-bottom:none;padding-bottom:0">
+          <div class="ex-num" style="background:#fff7e6;border-color:#fde68a">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=Z9_ThjKQyOg" target="_blank" rel="noopener">Single-Leg Balance Hold</a>
+            <div class="ex-dose"><strong>30s/side</strong> · repeat circuit 2×, ~5 min total</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group" style="margin-top:14px">
+        <div class="ex-group-title">Cool-Down</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <div class="ex-link" style="color:var(--text2);cursor:default">Adductor + hamstring stretch</div>
+            <div class="ex-dose"><strong>2×30s</strong> each</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <div class="ex-link" style="color:var(--text2);cursor:default">Foam roll inner thigh &amp; hamstrings</div>
+            <div class="ex-dose"><strong>2–3 min</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FRIDAY -->
+  <div class="day-card" id="day-fri">
+    <div class="day-header" onclick="toggle('day-fri')">
+      <div class="day-dot" style="background:#2563eb"></div>
+      <div class="day-header-text">
+        <div class="day-name">Friday</div>
+        <div class="day-subtitle">Easy run</div>
+      </div>
+      <span class="day-badge badge-run">Run</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+      <p class="day-plain">Run as planned.</p>
+    </div>
+  </div>
+
+  <!-- SATURDAY -->
+  <div class="day-card" id="day-sat">
+    <div class="day-header" onclick="toggle('day-sat')">
+      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-header-text">
+        <div class="day-name">Saturday</div>
+        <div class="day-subtitle">Glute Medius &amp; Balance + Lower Back</div>
+      </div>
+      <span class="day-badge badge-str">Strength</span>
+      <div class="day-arrow">▼</div>
+    </div>
+    <div class="day-body">
+
+      <div class="ex-group">
+        <div class="ex-group-title">Warm-Up</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=6eoK_yxY8Ak" target="_blank" rel="noopener">Mini Band Lateral Walk</a>
+            <div class="ex-dose"><strong>2×10</strong> each way</div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank" rel="noopener">Side Leg Swings</a>
+            <div class="ex-dose"><strong>10/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
+            <div class="ex-dose"><strong>2×10</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group">
+        <div class="ex-group-title">Strength</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=QjKyGqrAaP4" target="_blank" rel="noopener">Clamshells (with band)</a>
+            <div class="ex-dose"><strong>3×15/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank" rel="noopener">Single-Leg RDL</a>
+            <div class="ex-dose"><strong>3×8/leg</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">3</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=BzeSd1aycCw" target="_blank" rel="noopener">Star Balance Reach</a>
+            <div class="ex-dose"><strong>2×5/leg</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">4</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=edTXNT-etYc" target="_blank" rel="noopener">Side Plank with Top-Leg Raise</a>
+            <div class="ex-dose"><strong>2×10/side</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group">
+        <div class="ex-group-title">Lower Back</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <a class="ex-link" href="https://www.youtube.com/watch?v=JENidBlddKw" target="_blank" rel="noopener">Kettlebell Good Morning</a>
+            <div class="ex-dose"><strong>3×10</strong> · light; hinge pattern</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-group">
+        <div class="ex-group-title">Cool-Down</div>
+        <div class="ex-item">
+          <div class="ex-num">1</div>
+          <div class="ex-content">
+            <div class="ex-link" style="color:var(--text2);cursor:default">Piriformis + lateral hip stretch</div>
+            <div class="ex-dose"><strong>2×30s/side</strong></div>
+          </div>
+        </div>
+        <div class="ex-item">
+          <div class="ex-num">2</div>
+          <div class="ex-content">
+            <div class="ex-link" style="color:var(--text2);cursor:default">Foam roll glutes</div>
+            <div class="ex-dose"><strong>2–3 min</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+  // Auto-open today's day
+  const days = ['day-sun','day-mon','day-tue','day-wed','day-thu','day-fri','day-sat'];
+  const el = document.getElementById(days[new Date().getDay()]);
+  if (el) el.classList.add('open');
+</script>
+
 </body>
 </html>
