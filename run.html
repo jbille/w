@@ -1336,10 +1336,15 @@ function buildDays() {
     }
 
     const sciHtml  = e.science ? `<div class="science-box">◆ <strong>Science:</strong> ${e.science}</div>` : '';
-    // const tipHtml  = e.tip     ? `<div class="tip-box">${e.tip}</div>` : '';
+    const tipHtml  = e.tip     ? `<div class="tip-box">${e.tip}</div>` : '';
     const warnHtml = e.warn    ? `<div class="warn-box">⚠️ ${e.warn}</div>` : '';
     const fileHtml = e.file    ? `<div class="file-row">⚡ intervals.icu / WatchFit: <span>${e.file}</span></div>` : '';
     const miHtml   = e.miles > 0 ? `<div class="day-right"><span class="day-miles-num">${e.miles}</span><span class="day-miles-unit">mi</span></div>` : '';
+
+    const labelHtml = e.type === 'strength'
+      ? '<a href="/w/workout.html" style="color:inherit;text-decoration:underline;text-underline-offset:2px;text-decoration-color:#4b5563">' + e.label + '</a>'
+      : e.label;
+    const paceTagHtml = e.paceTag ? '<div class="day-pace-tag">\u{1F4CD} ' + e.paceTag + '</div>' : '';
 
     card.innerHTML = `
       <div class="day-row">
@@ -1347,11 +1352,11 @@ function buildDays() {
         <div class="day-info">
           <div class="day-name-row">
             <span class="day-abbr">${e.day}</span>
-            <span class="day-label">${e.type === 'strength' ? `<a href="workout.html" style="color:inherit;text-decoration:underline;text-underline-offset:2px;text-decoration-color:#4b5563">${e.label}</a>` : e.label}</span>
+            <span class="day-label">${labelHtml}</span>
             ${badges}
           </div>
           <div class="day-summary">${e.summary}</div>
-          ${e.paceTag ? `<div class="day-pace-tag">📍 ${e.paceTag}</div>` : ''}
+          ${paceTagHtml}
         </div>
         ${miHtml}
         <div class="day-arrow">▼</div>
