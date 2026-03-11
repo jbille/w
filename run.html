@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marathon Pre-Training Plan</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #08090e; color: #e2e8f0; font-family: Georgia, serif; min-height: 100vh; }
+  #header { background: linear-gradient(135deg, #0f172a, #1e1b4b 60%, #0f172a); border-bottom: 1px solid #1e293b; padding: 20px 24px; }
+  #header-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 8px; }
+  .h-sub { font-size: 10px; letter-spacing: 0.18em; color: #475569; text-transform: uppercase; margin-bottom: 3px; }
+  .h-title { font-size: 22px; font-weight: bold; color: #f1f5f9; letter-spacing: -0.4px; }
+  .h-detail { font-size: 12px; color: #475569; margin-top: 4px; }
+  #week-miles { font-size: 20px; font-weight: bold; }
+  #main { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+  .box { background: #0f1117; border: 1px solid #1f2937; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+  .box-title { font-size: 10px; color: #4b5563; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10px; }
+  .zone-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+  .zchip { font-size: 11px; padding: 6px 10px; border-radius: 6px; min-width: 118px; }
+  .zchip .zn { font-weight: bold; font-size: 12px; }
+  .zchip .zb { font-size: 10px; margin-top: 2px; opacity: 0.85; }
+  .zchip .zp { font-size: 11px; margin-top: 2px; font-weight: 600; }
+  #bars { display: flex; align-items: flex-end; gap: 3px; height: 52px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 2px; }
+  .bar { width: 100%; border-radius: 3px 3px 0 0; transition: opacity 0.12s; }
+  .bar-num { font-size: 8px; color: #374151; }
+  .bar-num.sel { color: #f1f5f9; }
+  .phase-legend { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+  .pl-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #6b7280; }
+  .pl-sq { width: 7px; height: 7px; border-radius: 2px; }
+  #week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  #week-nav-left { display: flex; align-items: center; gap: 10px; }
+  #week-title { font-size: 16px; font-weight: bold; color: #f1f5f9; }
+  #phase-badge { font-size: 12px; padding: 2px 8px; border-radius: 99px; }
+  .nav-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid #2d3748; background: #1a202c; color: #9ca3af; cursor: pointer; font-size: 12px; font-family: Georgia, serif; }
+  .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  #days { display: flex; flex-direction: column; gap: 7px; }
+  .day-card { border-radius: 9px; border: 1px solid #1f2937; background: #0c0e14; cursor: pointer; overflow: hidden; transition: border-color 0.12s; }
+  .day-row { display: flex; align-items: center; padding: 11px 14px; gap: 10px; }
+  .day-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .day-info { flex: 1; min-width: 0; }
+  .day-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .day-abbr { font-size: 11px; color: #4b5563; min-width: 26px; }
+  .day-label { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+  .zwo-badge { font-size: 10px; padding: 1px 5px; border-radius: 99px; background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); }
+  .nor-badge { font-size: 10px; padding: 1px 5px; border-radius: 99px; background: rgba(168,85,247,0.12); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.25); }
+  .day-summary { font-size: 12px; color: #4b5563; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .day-pace-tag { font-size: 10px; color: #7dd3fc; margin-top: 2px; }
+  .day-right { text-align: right; flex-shrink: 0; }
+  .day-miles-num { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+  .day-miles-unit { font-size: 10px; color: #4b5563; margin-left: 2px; }
+  .day-arrow { color: #374151; font-size: 11px; flex-shrink: 0; margin-left: 6px; }
+  .day-expanded { border-top: 1px solid #1f2937; padding: 13px 14px; background: #080b14; display: none; }
+  .day-card.open .day-expanded { display: block; }
+  .exp-lbl { font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .science-box { padding: 7px 10px; border-radius: 6px; background: rgba(168,85,247,0.07); border: 1px solid rgba(168,85,247,0.2); font-size: 11px; color: #d8b4fe; line-height: 1.6; margin-bottom: 8px; }
+  .pace-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+  .pace-table tr { border-bottom: 1px solid #151d2e; }
+  .pace-table tr:last-child { border-bottom: none; }
+  .pace-table td { font-size: 12px; padding: 5px 8px; vertical-align: top; }
+  .pt-seg { color: #64748b; width: 38%; }
+  .pt-hr  { color: #94a3b8; width: 28%; }
+  .pt-pace { color: #f1f5f9; font-weight: 600; width: 34%; }
+  .pace-table-hdr td { font-size: 10px !important; color: #374151 !important; font-weight: normal !important; padding-bottom: 2px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .tip-box  { padding: 7px 10px; border-radius: 6px; background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2); font-size: 11px; color: #a5b4fc; line-height: 1.6; margin-bottom: 8px; }
+  .warn-box { padding: 7px 10px; border-radius: 6px; background: rgba(249,115,22,0.07); border: 1px solid rgba(249,115,22,0.2); font-size: 11px; color: #fdba74; line-height: 1.6; margin-bottom: 8px; }
+  .file-row { font-size: 12px; color: #4b5563; margin-top: 8px; }
+  .file-row span { color: #fb923c; font-family: monospace; }
+  #legend-box { margin-top: 20px; padding: 12px 14px; border-radius: 9px; border: 1px solid #1f2937; background: #0c0e14; }
+  .legend-title { font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; }
+  .legend-items { display: flex; gap: 14px; flex-wrap: wrap; }
+  .legend-item { font-size: 11px; color: #6b7280; }
+</style>
+</head>
+<body>
+<div id="header">
+  <div id="header-inner">
+    <div>
+      <div class="h-sub">110-Day Base Block · Mar 16 – Jun 28, 2026 · Weeks start Monday</div>
+      <div class="h-title">Marathon Pre-Training Plan</div>
+      <div class="h-detail">Race: Oct 18, 2026 &nbsp;·&nbsp; Max HR: 177 &nbsp;·&nbsp; Norwegian 4×4 + Jack Daniels I-pace &nbsp;·&nbsp; Z2: 128–139 · Z3: 140–151 · Z4: 152–163 · Z5: 164–177</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:#475569">Week <span id="cur-week-num">1</span> / 16</div>
+      <div id="week-miles"></div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div class="box">
+    <div class="box-title">Heart Rate Zones &amp; Pace Targets — confirmed from GPX data</div>
+    <div class="zone-grid">
+      <div class="zchip" style="background:rgba(107,114,128,0.12);border:1px solid rgba(107,114,128,0.25)">
+        <div class="zn" style="color:#9ca3af">Z1 Recovery</div>
+        <div class="zb" style="color:#9ca3af">Below 127 bpm</div>
+        <div class="zp" style="color:#9ca3af">12:00+ /mile</div>
+      </div>
+      <div class="zchip" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.28)">
+        <div class="zn" style="color:#6ee7b7">Z2 Aerobic</div>
+        <div class="zb" style="color:#6ee7b7">128–139 bpm</div>
+        <div class="zp" style="color:#6ee7b7">10:00–11:00 /mile</div>
+      </div>
+      <div class="zchip" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.28)">
+        <div class="zn" style="color:#fcd34d">Z3 Tempo</div>
+        <div class="zb" style="color:#fcd34d">140–151 bpm</div>
+        <div class="zp" style="color:#fcd34d">9:30–10:15 /mile</div>
+      </div>
+      <div class="zchip" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.28)">
+        <div class="zn" style="color:#fca5a5">Z4 Threshold</div>
+        <div class="zb" style="color:#fca5a5">152–163 bpm</div>
+        <div class="zp" style="color:#fca5a5">8:30–9:30 /mile</div>
+      </div>
+      <div class="zchip" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.28)">
+        <div class="zn" style="color:#d8b4fe">Z5 / I-pace</div>
+        <div class="zb" style="color:#d8b4fe">164–177 bpm (90–95% max)</div>
+        <div class="zp" style="color:#d8b4fe">8:00–8:30 /mile</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-title">Weekly Mileage — click to jump to week</div>
+    <div id="bars"></div>
+    <div class="phase-legend">
+      <div class="pl-item"><div class="pl-sq" style="background:#10b981"></div>Aerobic Base</div>
+      <div class="pl-item"><div class="pl-sq" style="background:#38bdf8"></div>Build + Intro Intervals</div>
+      <div class="pl-item"><div class="pl-sq" style="background:#f59e0b"></div>Norwegian 4×4</div>
+      <div class="pl-item"><div class="pl-sq" style="background:#f43f5e"></div>Peak / Daniels I-pace</div>
+    </div>
+  </div>
+
+  <div id="week-nav">
+    <div id="week-nav-left">
+      <span id="week-title">Week 1</span>
+      <span id="phase-badge"></span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="nav-btn" id="btn-prev" onclick="changeWeek(-1)">&#8592; Prev</button>
+      <button class="nav-btn" id="btn-next" onclick="changeWeek(1)">Next &#8594;</button>
+    </div>
+  </div>
+
+  <div id="days"></div>
+
+  <div id="legend-box">
+    <div class="legend-title">Legend</div>
+    <div class="legend-items">
+      <div class="legend-item">&#9889; Workout</div>
+      <div class="legend-item">&#127939; Long / Easy Run</div>
+      <div class="legend-item">&#128260; Recovery Run</div>
+      <div class="legend-item">&#128170; Leg Strength</div>
+      <div class="legend-item">&#127947; Lifting + Legs</div>
+      <div class="legend-item">&#128564; Rest</div>
+      <div class="legend-item" style="color:#d8b4fe">&#9670; Norwegian 4×4</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── SCHEDULE ─────────────────────────────────────────────────────────────────
+// Weeks start Monday. Week 1 = Mar 16, 2026.
+// Day order per week: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+// Mon = Recovery run + legs | Tue = Rest | Wed = Workout | Thu = Legs only
+// Fri = Easy run | Sat = Lifting + legs | Sun = Long run
+//
+// Workout philosophy:
+//   • Daniels "I" pace = 97-100% VO2max = 164-177 bpm = ~8:00-8:30/mile for Jimmy
+//   • Norwegian 4x4 = 4 min @ 90-95% HRmax (164-168 bpm), 3 min active recovery
+//   • Research: Helgerud et al. 2007 - 4x4 at 90-95% HRmax superior to MICT for VO2max
+//   • Daniels: I-pace intervals of 3-5 min, equal jog recovery, total I-pace ≤ 8% weekly miles
+//   • Progression: build to full 4x4 over 4 weeks, then extend/vary
+//
+// Zone paces confirmed from GPX:
+//   Z2 (128-139): 10:00-11:00/mi | Z3 (140-151): 9:30-10:15/mi
+//   Z4 (152-163): 8:30-9:30/mi   | Z5/I (164-177): 8:00-8:30/mi
+
+const SCHEDULE = [
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 1: AEROBIC BASE — Weeks 1–4 (Mar 16 – Apr 12)
+// Build aerobic foundation before introducing VO2max intervals
+// ═══════════════════════════════════════════════════════════════════
+
+// ── WEEK 1 (Mar 16) ─────────────────────────────────────────────────────────
+{date:"2026-03-16",day:"Mon",week:1,type:"recovery",miles:3,
+ label:"Recovery Run + Legs",summary:"3 miles easy low-Z2 + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 3 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:"Start of the block. Keep this genuinely easy — low end of Z2.",warn:null},
+
+{date:"2026-03-17",day:"Tue",week:1,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:"Walk, stretch, foam roll.",warn:null},
+
+{date:"2026-03-18",day:"Wed",week:1,type:"workout",miles:4.5,
+ label:"Zone 2 Intro + Strides",
+ summary:"10 min warmup · 25 min Z2 · 4×20sec strides · cooldown",
+ paceTag:"Z2: 10:00–11:00/mi · Strides: ~8:00/mi",
+ file:"wk01_z2_strides.zwo",
+ science:"Jack Daniels: strides (R-pace) develop neuromuscular efficiency and leg turnover. These short accelerations prime the legs for harder work in coming weeks without meaningful stress.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 main set 25 min","128–139 bpm","10:00–11:00/mi"],
+   ["Strides ×4 (20 sec)","164–177 bpm","~8:00/mi — controlled, not all-out"],
+   ["Walk recovery ×4","< 120 bpm","60 sec walk after each stride"],
+   ["Cooldown 5 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Strides should feel fast but relaxed. Think 90% — not a sprint. Let HR fully recover before each one.",warn:null},
+
+{date:"2026-03-19",day:"Thu",week:1,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Glute bridges · single-leg squats · TKEs · Copenhagen planks",
+ paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-03-20",day:"Fri",week:1,type:"easy",miles:4,
+ label:"Easy Run",summary:"4 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 4 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-03-21",day:"Sat",week:1,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting session + leg exercises",
+ paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-03-22",day:"Sun",week:1,type:"long",miles:5,
+ label:"Long Run",summary:"5 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 5 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"HR governs pace. Walk hills to stay in zone.",warn:null},
+
+// ── WEEK 2 (Mar 23) ─────────────────────────────────────────────────────────
+{date:"2026-03-23",day:"Mon",week:2,type:"recovery",miles:3,
+ label:"Recovery Run + Legs",summary:"3 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 3 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-03-24",day:"Tue",week:2,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-03-25",day:"Wed",week:2,type:"workout",miles:5.0,
+ label:"Aerobic Build + 6 Strides",
+ summary:"10 min warmup · 30 min Z2 · 6×20sec strides · cooldown",
+ paceTag:"Z2: 10:00–11:00/mi · Strides: ~8:00/mi",
+ file:"wk02_z2_strides.zwo",
+ science:"Daniels: strides at R-pace (repetition pace) improve running economy and neuromuscular coordination. Adding 2 more strides vs week 1 continues this development without adding fatigue.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 main set 30 min","128–139 bpm","10:00–11:00/mi"],
+   ["Strides ×6 (20 sec)","164–177 bpm","~8:00/mi"],
+   ["Walk recovery ×6","< 120 bpm","60 sec walk after each"],
+   ["Cooldown 5 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"6 strides instead of 4. Still short — keep them relaxed and sharp.",warn:null},
+
+{date:"2026-03-26",day:"Thu",week:2,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-03-27",day:"Fri",week:2,type:"easy",miles:4,
+ label:"Easy Run",summary:"4 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 4 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-03-28",day:"Sat",week:2,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-03-29",day:"Sun",week:2,type:"long",miles:6,
+ label:"Long Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"Slow the back half if HR drifts toward 140.",warn:null},
+
+// ── WEEK 3 (Mar 30) ─────────────────────────────────────────────────────────
+{date:"2026-03-30",day:"Mon",week:3,type:"recovery",miles:3,
+ label:"Recovery Run + Legs",summary:"3 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 3 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-03-31",day:"Tue",week:3,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-01",day:"Wed",week:3,type:"workout",miles:5.0,
+ label:"Tempo Intro — 2×8 min",
+ summary:"Warmup · 2×8 min Z3 tempo · 3 min rest · cooldown",
+ paceTag:"Tempo: 9:30–10:15/mi · HR 140–151",
+ file:"wk03_tempo_2x8.zwo",
+ science:"Daniels T-pace (threshold): 83–88% VO2max, 88–92% HRmax. Cruise intervals of 5–15 min with short rest build lactate clearance. Starting with 2×8 min is a conservative entry before progressing to longer Z3 work and Z5 intervals.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Tempo block 1 (8 min)","140–151 bpm","9:30–10:15/mi"],
+   ["Easy jog rest (3 min)","128–135 bpm","10:30–11:30/mi"],
+   ["Tempo block 2 (8 min)","140–151 bpm","9:30–10:15/mi"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Even splits across both blocks. 9:30–10:15/mi should feel comfortably hard — you can speak a few words, not a conversation.",warn:null},
+
+{date:"2026-04-02",day:"Thu",week:3,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-03",day:"Fri",week:3,type:"easy",miles:5,
+ label:"Easy Run",summary:"5 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 5 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-04",day:"Sat",week:3,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-05",day:"Sun",week:3,type:"long",miles:7,
+ label:"Long Run",summary:"7 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 7 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"If IT band or hip flexor tightens, back off pace immediately. Don't push through it at this stage.",warn:null},
+
+// ── WEEK 4 — Cutback (Apr 6) ─────────────────────────────────────────────────
+{date:"2026-04-06",day:"Mon",week:4,type:"recovery",miles:3,
+ label:"Recovery Run + Legs",summary:"3 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 3 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-07",day:"Tue",week:4,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-08",day:"Wed",week:4,type:"workout",miles:4.5,
+ label:"Cutback — Z2 + 4 Strides",
+ summary:"Warmup · 30 min Z2 · 4×20sec strides · cooldown",
+ paceTag:"Z2: 10:00–11:00/mi · Strides: ~8:00/mi — cutback week",
+ file:"wk04_cutback_strides.zwo",
+ science:"Cutback weeks allow supercompensation — the body rebuilds stronger during recovery. Keeping strides maintains neuromuscular sharpness without accumulating fatigue.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 easy 30 min","128–139 bpm","10:00–11:00/mi"],
+   ["Strides ×4 (20 sec)","164–177 bpm","~8:00/mi"],
+   ["Walk recovery ×4","< 120 bpm","60 sec walk"],
+   ["Cooldown 5 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Cutback week — reduced volume. Focus on form during the strides.",warn:null},
+
+{date:"2026-04-09",day:"Thu",week:4,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-10",day:"Fri",week:4,type:"easy",miles:4,
+ label:"Easy Run",summary:"4 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 4 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-11",day:"Sat",week:4,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-12",day:"Sun",week:4,type:"long",miles:6,
+ label:"Long Run",summary:"6 miles Zone 2 — cutback",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"Cutback long run. Should feel noticeably easier than week 3.",warn:null},
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2: BUILD + INTRO INTERVALS — Weeks 5–8 (Apr 13 – May 10)
+// Introduce Norwegian 4x4 progressively: 2x4 → 3x4 → full 4x4
+// ═══════════════════════════════════════════════════════════════════
+
+// ── WEEK 5 (Apr 13) ─────────────────────────────────────────────────────────
+{date:"2026-04-13",day:"Mon",week:5,type:"recovery",miles:4,
+ label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 4 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-14",day:"Tue",week:5,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-15",day:"Wed",week:5,type:"workout",miles:5.5,
+ label:"Norwegian Build — 2×4 min",
+ summary:"Warmup · 2×4 min @ Z5 / 3 min jog · cooldown — intro to 4×4",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 (90–95% max)",
+ file:"wk05_norwegian_2x4.zwo",
+ science:"Norwegian 4×4 protocol (Helgerud et al., 2007): 4 min at 90–95% HRmax followed by 3 min active recovery. This is the most studied protocol for VO2max improvement — superior to MICT and lactate threshold training. Starting with 2×4 allows HR to reach target zone without overloading. Takes ~2 min for HR to reach VO2max intensity, so 4 min intervals hit the sweet spot.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi · 90–95% max HR"],
+   ["Active recovery 1 — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi · maintain effort"],
+   ["Active recovery 2 — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"First time hitting Z5 in a structured way. HR won't reach 164–168 in the first minute — that's normal. It'll climb during the interval. Focus on sustaining the effort, not hitting HR immediately.",
+ warn:"If HR spikes past 174 and stays there, back off pace slightly. Target is 164–168, not maximum."},
+
+{date:"2026-04-16",day:"Thu",week:5,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-17",day:"Fri",week:5,type:"easy",miles:5,
+ label:"Easy Run",summary:"5 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 5 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-18",day:"Sat",week:5,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-19",day:"Sun",week:5,type:"long",miles:8,
+ label:"Long Run",summary:"8 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 8 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"First run over 7 miles. Consider a gel at mile 5. Keep fully aerobic.",warn:null},
+
+// ── WEEK 6 (Apr 20) ─────────────────────────────────────────────────────────
+{date:"2026-04-20",day:"Mon",week:6,type:"recovery",miles:4,
+ label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 4 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-21",day:"Tue",week:6,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-22",day:"Wed",week:6,type:"workout",miles:6.0,
+ label:"Norwegian Build — 3×4 min",
+ summary:"Warmup · 3×4 min @ Z5 / 3 min jog · cooldown",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 (90–95% max)",
+ file:"wk06_norwegian_3x4.zwo",
+ science:"Adding a 3rd interval increases total time at VO2max. Research shows that total accumulated time at VO2max intensity (≥90% HRmax) is the key driver of adaptation. 3×4 = 12 min at target intensity.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Interval 1 pace sets the ceiling — if you blow up on 1, you won't finish 3. Start conservative at 8:30/mi and see how intervals 2 and 3 feel.",warn:null},
+
+{date:"2026-04-23",day:"Thu",week:6,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-24",day:"Fri",week:6,type:"easy",miles:5,
+ label:"Easy Run",summary:"5 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 5 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-25",day:"Sat",week:6,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-26",day:"Sun",week:6,type:"long",miles:9,
+ label:"Long Run",summary:"9 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 9 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"Carry water. HR naturally drifts up over time — slow down if it does.",warn:null},
+
+// ── WEEK 7 (Apr 27) ─────────────────────────────────────────────────────────
+{date:"2026-04-27",day:"Mon",week:7,type:"recovery",miles:4,
+ label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 4 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-04-28",day:"Tue",week:7,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-04-29",day:"Wed",week:7,type:"workout",miles:6.0,
+ label:"Full Norwegian 4×4",
+ summary:"Warmup · 4×4 min @ Z5 / 3 min jog · cooldown — complete protocol",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 (90–95% max)",
+ file:"wk07_norwegian_4x4.zwo",
+ science:"This is the complete Norwegian 4×4 as validated by Helgerud et al. (2007). 16 total minutes at 90–95% HRmax with 3 min active recovery. Shown to improve VO2max by 7–10% over 8 weeks when done twice weekly. Active recovery (not rest) is essential — keeps cardiac output elevated for the next interval.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog — DON'T walk"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 4 — 4 min","164–177 bpm","8:00–8:30/mi — finish strong"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Full 4×4 for the first time. The 4th interval will hurt — that's expected. Keep active recovery as a jog, not a walk. The jog maintains cardiac output and makes the next interval more effective.",
+ warn:"HR takes ~2 min to reach 164+ in each interval — that's normal physiology. Don't sprint the first 30 seconds trying to hit target HR immediately."},
+
+{date:"2026-04-30",day:"Thu",week:7,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-01",day:"Fri",week:7,type:"easy",miles:5,
+ label:"Easy Run",summary:"5 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 5 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-02",day:"Sat",week:7,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-03",day:"Sun",week:7,type:"long",miles:10,
+ label:"Long Run",summary:"10 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–10","128–139 bpm","10:00–11:00/mi — gel at mi 5, 8"]],
+ tip:"First double-digit long run. Fuel at miles 5 and 8. Fully aerobic.",warn:null},
+
+// ── WEEK 8 — Cutback (May 4) ─────────────────────────────────────────────────
+{date:"2026-05-04",day:"Mon",week:8,type:"recovery",miles:4,
+ label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 4 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-05",day:"Tue",week:8,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-06",day:"Wed",week:8,type:"workout",miles:5.0,
+ label:"Cutback — 2×4 min + Strides",
+ summary:"Warmup · 2×4 min Z5 / 3 min rest · 4 strides · cooldown",
+ paceTag:"Intervals: 8:00–8:30/mi · Strides: ~8:00/mi — cutback week",
+ file:"wk08_cutback_2x4.zwo",
+ science:"Cutback week maintains neuromuscular and VO2max stimulus at reduced volume. Half the interval load of week 7 while the body consolidates adaptations.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Strides ×4 (20 sec)","164–177 bpm","~8:00/mi"],
+   ["Walk recovery ×4","< 120 bpm","60 sec walk"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Cutback week — back to 2 intervals. Should feel more manageable after the full 4×4 last week.",warn:null},
+
+{date:"2026-05-07",day:"Thu",week:8,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-08",day:"Fri",week:8,type:"easy",miles:4,
+ label:"Easy Run",summary:"4 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 4 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-09",day:"Sat",week:8,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-10",day:"Sun",week:8,type:"long",miles:8,
+ label:"Long Run",summary:"8 miles Zone 2 — cutback",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 8 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"Cutback long run. Should feel easy after 10 miles last week.",warn:null},
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 3: NORWEGIAN 4×4 — Weeks 9–12 (May 11 – Jun 7)
+// Full 4×4 protocol twice-weekly equivalent; vary with Daniels cruise intervals
+// ═══════════════════════════════════════════════════════════════════
+
+// ── WEEK 9 (May 11) ─────────────────────────────────────────────────────────
+{date:"2026-05-11",day:"Mon",week:9,type:"recovery",miles:4,
+ label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 4 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-12",day:"Tue",week:9,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-13",day:"Wed",week:9,type:"workout",miles:6.5,
+ label:"Norwegian 4×4 — Full Protocol",
+ summary:"Warmup · 4×4 min @ 90–95% max / 3 min jog · cooldown",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177",
+ file:"wk09_norwegian_4x4.zwo",
+ science:"You're now 8 weeks into training. Research shows VO2max improvements from 4×4 are significant at 8 weeks. Each session at 90–95% HRmax should feel slightly more sustainable than week 7 as cardiac adaptations take hold.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 4 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"If intervals 1 and 2 felt manageable in week 7, you can try nudging pace to 7:55/mi on intervals 3 and 4 this week. Let HR tell you if that's sustainable.",warn:null},
+
+{date:"2026-05-14",day:"Thu",week:9,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-15",day:"Fri",week:9,type:"easy",miles:6,
+ label:"Easy Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-16",day:"Sat",week:9,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-17",day:"Sun",week:9,type:"long",miles:11,
+ label:"Long Run",summary:"11 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–11","128–139 bpm","10:00–11:00/mi — gel at mi 4, 7, 10"]],
+ tip:"Fuel at miles 4, 7, and 10. Watch for cardiac drift (HR climbing at same pace) in the final miles.",warn:null},
+
+// ── WEEK 10 (May 18) ────────────────────────────────────────────────────────
+{date:"2026-05-18",day:"Mon",week:10,type:"recovery",miles:5,
+ label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 5 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-19",day:"Tue",week:10,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-20",day:"Wed",week:10,type:"workout",miles:6.5,
+ label:"Daniels I-pace — 5×3 min",
+ summary:"Warmup · 5×3 min I-pace / 3 min jog · cooldown",
+ paceTag:"I-pace: 8:00–8:30/mi · HR 164–177 (97–100% VO2max)",
+ file:"wk10_daniels_5x3.zwo",
+ science:"Daniels Interval (I) pace = 97–100% VO2max effort. Shorter intervals (3 min) with equal jog recovery allows slightly faster pace than 4×4 while accumulating similar VO2max stimulus. 5×3 = 15 min total at I-pace. Daniels recommends 3–5 min intervals as optimal VO2max duration.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["I-pace interval ×5 (3 min)","164–177 bpm","8:00–8:20/mi — slightly faster than 4×4"],
+   ["Jog recovery ×5 (3 min)","128–135 bpm","10:30–11:30/mi"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Shorter intervals mean you can run slightly faster — aim for 8:00–8:20/mi. Jog recovery is equal time (3 min). All 5 intervals should be at the same pace.",warn:null},
+
+{date:"2026-05-21",day:"Thu",week:10,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-22",day:"Fri",week:10,type:"easy",miles:6,
+ label:"Easy Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-23",day:"Sat",week:10,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-24",day:"Sun",week:10,type:"long",miles:12,
+ label:"Long Run",summary:"12 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–12","128–139 bpm","10:00–11:00/mi — fuel every 35 min"]],
+ tip:"Treat like a dress rehearsal — warmup, fuel every 30–35 min, don't start too fast. Watch IT band in miles 9–12.",warn:null},
+
+// ── WEEK 11 (May 25) ────────────────────────────────────────────────────────
+{date:"2026-05-25",day:"Mon",week:11,type:"recovery",miles:5,
+ label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 5 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-26",day:"Tue",week:11,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-27",day:"Wed",week:11,type:"workout",miles:7.0,
+ label:"Norwegian 4×4 + 1 Bonus",
+ summary:"Warmup · 5×4 min @ 90–95% max / 3 min jog · cooldown",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 — 5 rounds",
+ file:"wk11_norwegian_5x4.zwo",
+ science:"Extending to 5×4 increases total time at VO2max from 16 to 20 minutes. Research supports that as fitness improves, adding a 5th interval is a natural progression before shortening recovery to increase density.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 4 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 5 — 4 min","164–177 bpm","8:00–8:30/mi — bonus interval"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"5th interval is your bonus. If you hit intervals 1–4 cleanly, go for it. If you're struggling, stop at 4. Never sacrifice form for volume.",
+ warn:"5×4 is a significant workout — 35 min of total work time including recovery. Eat and hydrate properly beforehand."},
+
+{date:"2026-05-28",day:"Thu",week:11,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-29",day:"Fri",week:11,type:"easy",miles:6,
+ label:"Easy Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-05-30",day:"Sat",week:11,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-05-31",day:"Sun",week:11,type:"long",miles:13,
+ label:"Long Run",summary:"13 miles Zone 2 — half marathon distance",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–13","128–139 bpm","10:00–11:00/mi — fuel every 30 min"]],
+ tip:"Half marathon distance. Fuel every 30 min, carry water. IT band check in miles 10–13.",warn:null},
+
+// ── WEEK 12 — Cutback (Jun 1) ────────────────────────────────────────────────
+{date:"2026-06-01",day:"Mon",week:12,type:"recovery",miles:4,
+ label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 4 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-02",day:"Tue",week:12,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-03",day:"Wed",week:12,type:"workout",miles:5.5,
+ label:"Cutback — 4×4 Standard",
+ summary:"Warmup · 4×4 min @ 90–95% max / 3 min jog · cooldown",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 — cutback week",
+ file:"wk12_norwegian_4x4_cutback.zwo",
+ science:"Cutback week returns to baseline 4×4. Volume reduction allows recovery while maintaining VO2max stimulus. The body supercompensates during this week.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 4 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Back to standard 4×4 after last week's 5×4. Should feel more manageable. Compare to week 7 — same workout, different fitness.",warn:null},
+
+{date:"2026-06-04",day:"Thu",week:12,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-05",day:"Fri",week:12,type:"easy",miles:5,
+ label:"Easy Run",summary:"5 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 5 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-06",day:"Sat",week:12,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-07",day:"Sun",week:12,type:"long",miles:10,
+ label:"Long Run",summary:"10 miles Zone 2 — cutback",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 10 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"Significant drop from 13. Enjoy the recovery.",warn:null},
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 4: PEAK — Weeks 13–16 (Jun 8 – Jun 28)
+// Peak VO2max work + Daniels I-pace + transition to marathon block
+// ═══════════════════════════════════════════════════════════════════
+
+// ── WEEK 13 (Jun 8) ─────────────────────────────────────────────────────────
+{date:"2026-06-08",day:"Mon",week:13,type:"recovery",miles:5,
+ label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 5 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-09",day:"Tue",week:13,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-10",day:"Wed",week:13,type:"workout",miles:7.0,
+ label:"Daniels I-pace — 6×3 min",
+ summary:"Warmup · 6×3 min I-pace / 3 min jog · cooldown",
+ paceTag:"I-pace: 7:55–8:20/mi · HR 164–177",
+ file:"wk13_daniels_6x3.zwo",
+ science:"Daniels: I-pace intervals accumulate time at VO2max. 6×3 = 18 min at I-pace — equivalent stress to 4×4 but with sharper pace. This variation prevents adaptation stagnation and challenges the system differently. Maximum I-pace volume per session: ~8% of weekly mileage (≈3.5 mi at this volume).",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["I-pace ×6 (3 min)","164–177 bpm","7:55–8:20/mi — slightly faster than 4×4"],
+   ["Jog recovery ×6 (3 min)","128–135 bpm","10:30–11:30/mi"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"6 intervals is a lot — pace interval 1 at 8:20/mi. If intervals 4–6 are falling apart, you went too fast early.",warn:null},
+
+{date:"2026-06-11",day:"Thu",week:13,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-12",day:"Fri",week:13,type:"easy",miles:6,
+ label:"Easy Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-13",day:"Sat",week:13,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-14",day:"Sun",week:13,type:"long",miles:14,
+ label:"Long Run",summary:"14 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–14","128–139 bpm","10:00–11:00/mi — fuel every 30 min"]],
+ tip:"Longest run of the block. Fuel every 30 min from mile 4. Pace discipline critical — don't let HR creep into Z3.",warn:null},
+
+// ── WEEK 14 — Peak (Jun 15) ──────────────────────────────────────────────────
+{date:"2026-06-15",day:"Mon",week:14,type:"recovery",miles:5,
+ label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 5 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-16",day:"Tue",week:14,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-17",day:"Wed",week:14,type:"workout",miles:7.5,
+ label:"PEAK — Norwegian 5×4 min",
+ summary:"Warmup · 5×4 min @ 90–95% max / 3 min jog · cooldown — PEAK WORKOUT",
+ paceTag:"Intervals: 7:55–8:30/mi · HR 164–177 — 5 rounds, peak week",
+ file:"wk14_norwegian_5x4_peak.zwo",
+ science:"Peak VO2max session: 20 min at 90–95% HRmax. Combined with peak long run this week, this is the highest training stress of the block. Helgerud's research confirms that 5×4 produces greater VO2max gains than standard 4×4 when the athlete has adapted to the base protocol.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:15–8:30/mi — start conservative"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:05–8:20/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:15/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 4 — 4 min","164–177 bpm","8:00–8:15/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 5 — 4 min","164–177 bpm","7:55–8:10/mi — negative split if able"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Peak workout. Negative split approach — start interval 1 slightly slower and build. If all 5 feel controlled, you've made massive fitness gains since week 5.",
+ warn:"Peak week has both this workout AND a 15-mile long run on Sunday. Fuel and sleep well Thursday–Saturday."},
+
+{date:"2026-06-18",day:"Thu",week:14,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-19",day:"Fri",week:14,type:"easy",miles:6,
+ label:"Easy Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-20",day:"Sat",week:14,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-21",day:"Sun",week:14,type:"long",miles:15,
+ label:"Long Run",summary:"15 miles Zone 2 — Peak long run",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–15","128–139 bpm","10:00–11:00/mi — fuel every 30 min, carry water"]],
+ tip:"Peak long run. Fuel every 30 min from mile 4. Goal: finish feeling like you had one more mile in you.",warn:null},
+
+// ── WEEK 15 (Jun 22) ─────────────────────────────────────────────────────────
+{date:"2026-06-22",day:"Mon",week:15,type:"recovery",miles:5,
+ label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
+ paceTag:"10:30–11:30/mi · HR 128–135",
+ paceRows:[["All 5 miles","128–135 bpm","10:30–11:30/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-23",day:"Tue",week:15,type:"rest",miles:0,
+ label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-24",day:"Wed",week:15,type:"workout",miles:6.0,
+ label:"Shakeout 4×4",
+ summary:"Warmup · 4×4 min @ 90–95% max / 3 min jog · cooldown — step back from peak",
+ paceTag:"Intervals: 8:00–8:30/mi · HR 164–177",
+ file:"wk15_shakeout_4x4.zwo",
+ science:"Step-down week after peak. Standard 4×4 at same intensity — compare how it feels vs week 7 when you first hit this workout. That delta is your VO2max improvement.",
+ paceRows:[
+   ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Interval 4 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
+   ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
+ ],
+ tip:"Notice how 4×4 feels easier now vs week 7. That's real — you've built significant VO2max capacity in 8 weeks of structured intervals.",warn:null},
+
+{date:"2026-06-25",day:"Thu",week:15,type:"strength",miles:0,
+ label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-26",day:"Fri",week:15,type:"easy",miles:6,
+ label:"Easy Run",summary:"6 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 6 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:null,warn:null},
+
+{date:"2026-06-27",day:"Sat",week:15,type:"lift",miles:0,
+ label:"Lifting + Legs",summary:"Lifting + leg exercises",paceTag:null,paceRows:[],tip:null,warn:null},
+
+{date:"2026-06-28",day:"Sun",week:15,type:"long",miles:12,
+ label:"Long Run",summary:"12 miles Zone 2",
+ paceTag:"10:00–11:00/mi · HR 128–139",
+ paceRows:[["All 12 miles","128–139 bpm","10:00–11:00/mi"]],
+ tip:"Step back from peak. Comfortable and controlled. Marathon block starts Monday.",warn:null},
+
+];
+
+// ─── LOOKUP DATA ──────────────────────────────────────────────────────────────
+const TYPES = {
+  workout:  {icon:"&#9889;", color:"#f97316", dim:"rgba(249,115,22,0.12)"},
+  long:     {icon:"&#127939;", color:"#3b82f6", dim:"rgba(59,130,246,0.12)"},
+  easy:     {icon:"&#127939;", color:"#22c55e", dim:"rgba(34,197,94,0.12)"},
+  recovery: {icon:"&#128260;", color:"#14b8a6", dim:"rgba(20,184,166,0.12)"},
+  rest:     {icon:"&#128564;", color:"#6b7280", dim:"rgba(107,114,128,0.08)"},
+  strength: {icon:"&#128170;", color:"#a855f7", dim:"rgba(168,85,247,0.12)"},
+  lift:     {icon:"&#127947;", color:"#6366f1", dim:"rgba(99,102,241,0.12)"},
+};
+
+const PHASES = {
+  1:"Aerobic Base",2:"Aerobic Base",3:"Aerobic Base",4:"Aerobic Base",
+  5:"Build + Intro Intervals",6:"Build + Intro Intervals",7:"Build + Intro Intervals",8:"Build + Intro Intervals",
+  9:"Norwegian 4×4",10:"Norwegian 4×4",11:"Norwegian 4×4",12:"Norwegian 4×4",
+  13:"Peak / Daniels I-pace",14:"Peak / Daniels I-pace",15:"Peak / Daniels I-pace",
+};
+const PHASE_COLOR = {
+  "Aerobic Base":"#10b981","Build + Intro Intervals":"#38bdf8",
+  "Norwegian 4×4":"#f59e0b","Peak / Daniels I-pace":"#f43f5e"
+};
+
+const byWeek={}, weekMiles={};
+SCHEDULE.forEach(e=>{
+  if(!byWeek[e.week]) byWeek[e.week]=[];
+  byWeek[e.week].push(e);
+  weekMiles[e.week]=(weekMiles[e.week]||0)+e.miles;
+});
+const maxMi=Math.max(...Object.values(weekMiles));
+let currentWeek=1, openDate=null;
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function buildBars(){
+  const c=document.getElementById('bars'); c.innerHTML='';
+  for(let w=1;w<=15;w++){
+    const mi=weekMiles[w]||0, h=Math.max(3,(mi/maxMi)*48), sel=w===currentWeek;
+    const color=PHASE_COLOR[PHASES[w]];
+    const col=document.createElement('div'); col.className='bar-col'; col.onclick=()=>goToWeek(w);
+    col.innerHTML=`<div class="bar" style="height:${h}px;background:${sel?'#fff':color};opacity:${sel?1:0.45}"></div><div class="bar-num${sel?' sel':''}">${w}</div>`;
+    c.appendChild(col);
+  }
+}
+
+function buildDays(){
+  const c=document.getElementById('days'); c.innerHTML='';
+  (byWeek[currentWeek]||[]).forEach(e=>{
+    const t=TYPES[e.type]||TYPES.rest, open=openDate===e.date;
+    const card=document.createElement('div');
+    card.className='day-card'+(open?' open':'');
+    card.style.borderColor=open?t.color+'55':'#1f2937';
+    card.onclick=()=>{openDate=open?null:e.date; buildDays();};
+
+    const isNorwegian = e.label && (e.label.includes('Norwegian') || e.label.includes('4×4') || e.label.includes('5×4'));
+    const isDaniels = e.label && e.label.includes('Daniels');
+
+    let paceHtml='';
+    if(e.paceRows&&e.paceRows.length){
+      paceHtml=`<div class="exp-lbl" style="margin-top:10px">Pace &amp; HR Targets</div>
+      <table class="pace-table">
+        <tr class="pace-table-hdr"><td>Segment</td><td>HR Target</td><td>Pace</td></tr>
+        ${e.paceRows.map(r=>`<tr><td class="pt-seg">${r[0]}</td><td class="pt-hr">${r[1]}</td><td class="pt-pace">${r[2]}</td></tr>`).join('')}
+      </table>`;
+    }
+    const sciHtml=e.science?`<div class="science-box">&#9670; <strong>Science:</strong> ${e.science}</div>`:'';
+    const tipHtml=e.tip?`<div class="tip-box">${e.tip}</div>`:'';
+    const warnHtml=e.warn?`<div class="warn-box">&#9888;&#65039; ${e.warn}</div>`:'';
+    const fileHtml=e.file?`<div class="file-row">&#9889; intervals.icu: <span>${e.file}</span> — Workouts &rarr; New &rarr; upload .zwo</div>`:'';
+    const milesHtml=e.miles>0?`<div class="day-right"><span class="day-miles-num">${e.miles}</span><span class="day-miles-unit">mi</span></div>`:'';
+
+    const badges = (e.file?'<span class="zwo-badge">&#9889; .zwo</span>':'') +
+                   (isNorwegian?'<span class="nor-badge">&#9670; NOR 4×4</span>':'') +
+                   (isDaniels?'<span class="nor-badge">&#9670; Daniels I</span>':'');
+
+    card.innerHTML=`
+      <div class="day-row">
+        <div class="day-icon" style="background:${t.dim}">${t.icon}</div>
+        <div class="day-info">
+          <div class="day-name-row">
+            <span class="day-abbr">${e.day}</span>
+            <span class="day-label">${e.label}</span>
+            ${badges}
+          </div>
+          <div class="day-summary">${e.summary}</div>
+          ${e.paceTag?`<div class="day-pace-tag">&#128205; ${e.paceTag}</div>`:''}
+        </div>
+        ${milesHtml}
+        <div class="day-arrow">${open?'&#9650;':'&#9660;'}</div>
+      </div>
+      <div class="day-expanded">${sciHtml}${paceHtml}${tipHtml}${warnHtml}${fileHtml}</div>`;
+    c.appendChild(card);
+  });
+}
+
+function updateHeader(){
+  const phase=PHASES[currentWeek]||"Peak", color=PHASE_COLOR[phase]||'#f43f5e';
+  document.getElementById('cur-week-num').textContent=currentWeek;
+  const wm=document.getElementById('week-miles');
+  wm.textContent=(weekMiles[currentWeek]||0).toFixed(1)+' mi';
+  wm.style.color=color;
+  document.getElementById('week-title').textContent='Week '+currentWeek;
+  const badge=document.getElementById('phase-badge');
+  badge.textContent=phase;
+  badge.style.cssText=`font-size:12px;padding:2px 8px;border-radius:99px;background:${color}22;color:${color};border:1px solid ${color}44`;
+  document.getElementById('btn-prev').disabled=currentWeek===1;
+  document.getElementById('btn-next').disabled=currentWeek===15;
+}
+
+function goToWeek(w){currentWeek=w;openDate=null;updateHeader();buildBars();buildDays();}
+function changeWeek(d){const n=currentWeek+d;if(n>=1&&n<=15)goToWeek(n);}
+
+goToWeek(1);
+</script>
+</body>
+</html>
