@@ -74,7 +74,6 @@ body {
   line-height: 1.5;
 }
 
-/* Hide detail on very small screens */
 @media (max-width: 380px) { .h-detail { display: none; } }
 
 .h-right { text-align: right; flex-shrink: 0; }
@@ -423,7 +422,7 @@ body {
   word-break: break-all;
 }
 
-/* ── PACE TABLE — responsive ── */
+/* ── PACE TABLE ── */
 .pace-table-wrap { margin-top: 4px; margin-bottom: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 .pace-table {
@@ -480,7 +479,6 @@ body {
 
 .legend-item { font-size: 11px; color: #6b7280; }
 
-/* ── SAFE AREA INSETS (notch phones) ── */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   #main { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
   #header { padding-top: max(14px, env(safe-area-inset-top)); }
@@ -749,7 +747,6 @@ const SCHEDULE = [
 
 // ═══ PHASE 2: BUILD + INTRO INTERVALS — Weeks 5–8 ═══
 
-// WEEK 5
 {date:"2026-04-13",day:"Mon",week:5,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -793,7 +790,6 @@ const SCHEDULE = [
  paceRows:[["All 8 miles","128–139 bpm","10:00–11:00/mi"]],
  tip:"First run over 7 miles. Consider a gel at mile 5. Keep fully aerobic.",warn:null},
 
-// WEEK 6
 {date:"2026-04-20",day:"Mon",week:6,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -838,7 +834,6 @@ const SCHEDULE = [
  paceRows:[["All 9 miles","128–139 bpm","10:00–11:00/mi"]],
  tip:"Carry water. HR naturally drifts up over time — slow down if it does.",warn:null},
 
-// WEEK 7
 {date:"2026-04-27",day:"Mon",week:7,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -886,7 +881,6 @@ const SCHEDULE = [
  paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–10","128–139 bpm","gel at mi 5, 8"]],
  tip:"First double-digit long run. Fuel at miles 5 and 8.",warn:null},
 
-// WEEK 8 — Cutback
 {date:"2026-05-04",day:"Mon",week:8,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -932,7 +926,6 @@ const SCHEDULE = [
 
 // ═══ PHASE 3: NORWEGIAN 4×4 — Weeks 9–12 ═══
 
-// WEEK 9
 {date:"2026-05-11",day:"Mon",week:9,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -979,7 +972,6 @@ const SCHEDULE = [
  paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–11","128–139 bpm","gel at mi 4, 7, 10"]],
  tip:"Fuel at miles 4, 7, and 10. Watch for cardiac drift in the final miles.",warn:null},
 
-// WEEK 10
 {date:"2026-05-18",day:"Mon",week:10,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1020,7 +1012,6 @@ const SCHEDULE = [
  paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–12","128–139 bpm","fuel every 35 min"]],
  tip:"Treat like a dress rehearsal — fuel every 30–35 min. IT band check miles 9–12.",warn:null},
 
-// WEEK 11
 {date:"2026-05-25",day:"Mon",week:11,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1070,7 +1061,6 @@ const SCHEDULE = [
  paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–13","128–139 bpm","fuel every 30 min"]],
  tip:"Half marathon distance. Fuel every 30 min, carry water. IT band check miles 10–13.",warn:null},
 
-// WEEK 12 — Cutback
 {date:"2026-06-01",day:"Mon",week:12,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1118,7 +1108,6 @@ const SCHEDULE = [
 
 // ═══ PHASE 4: PEAK — Weeks 13–15 ═══
 
-// WEEK 13
 {date:"2026-06-08",day:"Mon",week:13,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1159,7 +1148,6 @@ const SCHEDULE = [
  paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–14","128–139 bpm","fuel every 30 min"]],
  tip:"Longest run of the block. Fuel from mile 4. Pace discipline critical.",warn:null},
 
-// WEEK 14 — Peak
 {date:"2026-06-15",day:"Mon",week:14,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1209,7 +1197,6 @@ const SCHEDULE = [
  paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–15","128–139 bpm","fuel every 30 min, carry water"]],
  tip:"Peak long run. Fuel from mile 4. Goal: finish feeling like you had one more mile in you.",warn:null},
 
-// WEEK 15
 {date:"2026-06-22",day:"Mon",week:15,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1386,7 +1373,18 @@ function updateHeader() {
 function goToWeek(w) { currentWeek = w; openDate = null; updateHeader(); buildBars(); buildDays(); }
 function changeWeek(d) { const n = currentWeek + d; if (n >= 1 && n <= 15) goToWeek(n); }
 
-goToWeek(1);
+// ── AUTO-SELECT CURRENT WEEK ──
+// Anchor: Mar 9 2026 = start of Week 1 (Mar 9–15)
+// Week 2 = Mar 16–22, Week 3 = Mar 23–29, etc.
+// Formula: weekNum = floor((today - anchor) / 7 days) + 1, clamped to 1–15
+(function () {
+  var anchor = new Date('2026-03-09T00:00:00');
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var daysDiff = Math.floor((today - anchor) / 86400000);
+  var autoWeek = Math.floor(daysDiff / 7) + 1;
+  goToWeek(Math.max(1, Math.min(15, autoWeek)));
+})();
 </script>
 </body>
 </html>
