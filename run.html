@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>Marathon Pre-Training Plan</title>
+<title>🏃</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -74,6 +74,7 @@ body {
   line-height: 1.5;
 }
 
+/* Hide detail on very small screens */
 @media (max-width: 380px) { .h-detail { display: none; } }
 
 .h-right { text-align: right; flex-shrink: 0; }
@@ -422,7 +423,7 @@ body {
   word-break: break-all;
 }
 
-/* ── PACE TABLE ── */
+/* ── PACE TABLE — responsive ── */
 .pace-table-wrap { margin-top: 4px; margin-bottom: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 .pace-table {
@@ -479,6 +480,7 @@ body {
 
 .legend-item { font-size: 11px; color: #6b7280; }
 
+/* ── SAFE AREA INSETS (notch phones) ── */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   #main { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
   #header { padding-top: max(14px, env(safe-area-inset-top)); }
@@ -587,7 +589,7 @@ const SCHEDULE = [
 {date:"2026-03-17",day:"Tue",week:1,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:"Walk, stretch, foam roll.",warn:null},
 
-{date:"2026-03-18",day:"Wed",week:1,type:"workout",miles:4.5,
+{date:"2026-03-18",day:"Wed",week:1,type:"workout",miles:4.0,
  label:"Zone 2 Intro + Strides",
  summary:"10 min warmup · 25 min Z2 · 4×20sec strides · cooldown",
  paceTag:"Z2: 10:00–11:00/mi · Strides: ~8:00/mi",
@@ -631,7 +633,7 @@ const SCHEDULE = [
 {date:"2026-03-24",day:"Tue",week:2,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-03-25",day:"Wed",week:2,type:"workout",miles:5.0,
+{date:"2026-03-25",day:"Wed",week:2,type:"workout",miles:4.75,
  label:"Aerobic Build + 6 Strides",
  summary:"10 min warmup · 30 min Z2 · 6×20sec strides · cooldown",
  paceTag:"Z2: 10:00–11:00/mi · Strides: ~8:00/mi",
@@ -672,7 +674,7 @@ const SCHEDULE = [
 {date:"2026-03-31",day:"Tue",week:3,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-04-01",day:"Wed",week:3,type:"workout",miles:5.0,
+{date:"2026-04-01",day:"Wed",week:3,type:"workout",miles:3.75,
  label:"Tempo Intro — 2×8 min",
  summary:"Warmup · 2×8 min Z3 tempo · 3 min rest · cooldown",
  paceTag:"Tempo: 9:30–10:15/mi · HR 140–151",
@@ -747,6 +749,7 @@ const SCHEDULE = [
 
 // ═══ PHASE 2: BUILD + INTRO INTERVALS — Weeks 5–8 ═══
 
+// WEEK 5
 {date:"2026-04-13",day:"Mon",week:5,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -755,7 +758,7 @@ const SCHEDULE = [
 {date:"2026-04-14",day:"Tue",week:5,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-04-15",day:"Wed",week:5,type:"workout",miles:5.5,
+{date:"2026-04-15",day:"Wed",week:5,type:"workout",miles:3.75,
  label:"Norwegian Build — 2×4 min",
  summary:"Warmup · 2×4 min @ Z5 / 3 min jog · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 (90–95% max)",
@@ -770,7 +773,7 @@ const SCHEDULE = [
    ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
    ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
  ],
- tip:"First structured Z5 effort. HR won't reach 164 in the first minute — that's normal. Keep recovery as a jog, not a walk.",
+ tip:"Your peak HR of 163 bpm in this workout is just below the Z5 target of 164–177. This is very close to the threshold and completely expected for your first 2×4 — the short duration (only 2 intervals) means you're not fully driving HR up the way 4 full intervals will. Yes, you should go slightly faster: try 7:55–8:05/mi on the intervals (vs 8:00–8:30). The goal is to push HR into 164–168 by the end of each 4-minute interval. Keep recovery as a jog, not a walk.",
  warn:"If HR spikes past 174 and stays there, back off pace slightly. Target is 164–168, not max."},
 
 {date:"2026-04-16",day:"Thu",week:5,type:"strength",miles:0,
@@ -790,6 +793,7 @@ const SCHEDULE = [
  paceRows:[["All 8 miles","128–139 bpm","10:00–11:00/mi"]],
  tip:"First run over 7 miles. Consider a gel at mile 5. Keep fully aerobic.",warn:null},
 
+// WEEK 6
 {date:"2026-04-20",day:"Mon",week:6,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -798,7 +802,7 @@ const SCHEDULE = [
 {date:"2026-04-21",day:"Tue",week:6,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-04-22",day:"Wed",week:6,type:"workout",miles:6.0,
+{date:"2026-04-22",day:"Wed",week:6,type:"workout",miles:4.5,
  label:"Norwegian Build — 3×4 min",
  summary:"Warmup · 3×4 min @ Z5 / 3 min jog · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177",
@@ -834,6 +838,7 @@ const SCHEDULE = [
  paceRows:[["All 9 miles","128–139 bpm","10:00–11:00/mi"]],
  tip:"Carry water. HR naturally drifts up over time — slow down if it does.",warn:null},
 
+// WEEK 7
 {date:"2026-04-27",day:"Mon",week:7,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -842,7 +847,7 @@ const SCHEDULE = [
 {date:"2026-04-28",day:"Tue",week:7,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-04-29",day:"Wed",week:7,type:"workout",miles:6.0,
+{date:"2026-04-29",day:"Wed",week:7,type:"workout",miles:5.25,
  label:"Full Norwegian 4×4",
  summary:"Warmup · 4×4 min @ Z5 / 3 min jog · cooldown — complete protocol",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 (90–95% max)",
@@ -881,6 +886,7 @@ const SCHEDULE = [
  paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–10","128–139 bpm","gel at mi 5, 8"]],
  tip:"First double-digit long run. Fuel at miles 5 and 8.",warn:null},
 
+// WEEK 8 — Cutback
 {date:"2026-05-04",day:"Mon",week:8,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -889,7 +895,7 @@ const SCHEDULE = [
 {date:"2026-05-05",day:"Tue",week:8,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-05-06",day:"Wed",week:8,type:"workout",miles:5.0,
+{date:"2026-05-06",day:"Wed",week:8,type:"workout",miles:3.75,
  label:"Cutback — 2×4 min + Strides",
  summary:"Warmup · 2×4 min Z5 / 3 min jog · 4 strides · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · Strides: ~8:00/mi — cutback",
@@ -926,6 +932,7 @@ const SCHEDULE = [
 
 // ═══ PHASE 3: NORWEGIAN 4×4 — Weeks 9–12 ═══
 
+// WEEK 9
 {date:"2026-05-11",day:"Mon",week:9,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -934,7 +941,7 @@ const SCHEDULE = [
 {date:"2026-05-12",day:"Tue",week:9,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-05-13",day:"Wed",week:9,type:"workout",miles:6.5,
+{date:"2026-05-13",day:"Wed",week:9,type:"workout",miles:5.25,
  label:"Norwegian 4×4 — Full Protocol",
  summary:"Warmup · 4×4 min @ 90–95% max / 3 min jog · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177",
@@ -972,6 +979,7 @@ const SCHEDULE = [
  paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–11","128–139 bpm","gel at mi 4, 7, 10"]],
  tip:"Fuel at miles 4, 7, and 10. Watch for cardiac drift in the final miles.",warn:null},
 
+// WEEK 10
 {date:"2026-05-18",day:"Mon",week:10,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -980,7 +988,7 @@ const SCHEDULE = [
 {date:"2026-05-19",day:"Tue",week:10,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-05-20",day:"Wed",week:10,type:"workout",miles:6.5,
+{date:"2026-05-20",day:"Wed",week:10,type:"workout",miles:5.5,
  label:"Daniels I-pace — 5×3 min",
  summary:"Warmup · 5×3 min I-pace / 3 min jog · cooldown",
  paceTag:"I-pace: 8:00–8:30/mi · HR 164–177 (97–100% VO2max)",
@@ -1012,6 +1020,7 @@ const SCHEDULE = [
  paceRows:[["Miles 1–4","128–139 bpm","10:00–11:00/mi"],["Miles 5–12","128–139 bpm","fuel every 35 min"]],
  tip:"Treat like a dress rehearsal — fuel every 30–35 min. IT band check miles 9–12.",warn:null},
 
+// WEEK 11
 {date:"2026-05-25",day:"Mon",week:11,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1020,7 +1029,7 @@ const SCHEDULE = [
 {date:"2026-05-26",day:"Tue",week:11,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-05-27",day:"Wed",week:11,type:"workout",miles:7.0,
+{date:"2026-05-27",day:"Wed",week:11,type:"workout",miles:6.0,
  label:"Norwegian 4×4 + Bonus (5×4)",
  summary:"Warmup · 5×4 min @ 90–95% max / 3 min jog · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 — 5 rounds",
@@ -1061,6 +1070,7 @@ const SCHEDULE = [
  paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–13","128–139 bpm","fuel every 30 min"]],
  tip:"Half marathon distance. Fuel every 30 min, carry water. IT band check miles 10–13.",warn:null},
 
+// WEEK 12 — Cutback
 {date:"2026-06-01",day:"Mon",week:12,type:"recovery",miles:4,
  label:"Recovery Run + Legs",summary:"4 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1069,7 +1079,7 @@ const SCHEDULE = [
 {date:"2026-06-02",day:"Tue",week:12,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-06-03",day:"Wed",week:12,type:"workout",miles:5.5,
+{date:"2026-06-03",day:"Wed",week:12,type:"workout",miles:4.75,
  label:"Cutback — 4×4 Standard",
  summary:"Warmup · 4×4 min @ 90–95% max / 3 min jog · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177 — cutback week",
@@ -1108,6 +1118,7 @@ const SCHEDULE = [
 
 // ═══ PHASE 4: PEAK — Weeks 13–15 ═══
 
+// WEEK 13
 {date:"2026-06-08",day:"Mon",week:13,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1116,7 +1127,7 @@ const SCHEDULE = [
 {date:"2026-06-09",day:"Tue",week:13,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-06-10",day:"Wed",week:13,type:"workout",miles:7.0,
+{date:"2026-06-10",day:"Wed",week:13,type:"workout",miles:6.25,
  label:"Daniels I-pace — 6×3 min",
  summary:"Warmup · 6×3 min I-pace / 3 min jog · cooldown",
  paceTag:"I-pace: 7:55–8:20/mi · HR 164–177",
@@ -1148,6 +1159,7 @@ const SCHEDULE = [
  paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–14","128–139 bpm","fuel every 30 min"]],
  tip:"Longest run of the block. Fuel from mile 4. Pace discipline critical.",warn:null},
 
+// WEEK 14 — Peak
 {date:"2026-06-15",day:"Mon",week:14,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1156,7 +1168,7 @@ const SCHEDULE = [
 {date:"2026-06-16",day:"Tue",week:14,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-06-17",day:"Wed",week:14,type:"workout",miles:7.5,
+{date:"2026-06-17",day:"Wed",week:14,type:"workout",miles:6.0,
  label:"PEAK — Norwegian 5×4 min",
  summary:"Warmup · 5×4 min negative split / 3 min jog · cooldown",
  paceTag:"Intervals: 8:15→7:55/mi negative split · HR 164–177",
@@ -1197,6 +1209,7 @@ const SCHEDULE = [
  paceRows:[["Miles 1–5","128–139 bpm","10:00–11:00/mi"],["Miles 6–15","128–139 bpm","fuel every 30 min, carry water"]],
  tip:"Peak long run. Fuel from mile 4. Goal: finish feeling like you had one more mile in you.",warn:null},
 
+// WEEK 15
 {date:"2026-06-22",day:"Mon",week:15,type:"recovery",miles:5,
  label:"Recovery Run + Legs",summary:"5 miles easy + leg exercises",
  paceTag:"10:30–11:30/mi · HR 128–135",
@@ -1205,7 +1218,7 @@ const SCHEDULE = [
 {date:"2026-06-23",day:"Tue",week:15,type:"rest",miles:0,
  label:"Rest Day",summary:"Full rest",paceTag:null,paceRows:[],tip:null,warn:null},
 
-{date:"2026-06-24",day:"Wed",week:15,type:"workout",miles:6.0,
+{date:"2026-06-24",day:"Wed",week:15,type:"workout",miles:4.75,
  label:"Shakeout 4×4",
  summary:"Warmup · 4×4 min @ 90–95% max / 3 min jog · cooldown",
  paceTag:"Intervals: 8:00–8:30/mi · HR 164–177",
@@ -1373,18 +1386,7 @@ function updateHeader() {
 function goToWeek(w) { currentWeek = w; openDate = null; updateHeader(); buildBars(); buildDays(); }
 function changeWeek(d) { const n = currentWeek + d; if (n >= 1 && n <= 15) goToWeek(n); }
 
-// ── AUTO-SELECT CURRENT WEEK ──
-// Anchor: Mar 9 2026 = start of Week 1 (Mar 9–15)
-// Week 2 = Mar 16–22, Week 3 = Mar 23–29, etc.
-// Formula: weekNum = floor((today - anchor) / 7 days) + 1, clamped to 1–15
-(function () {
-  var anchor = new Date('2026-03-09T00:00:00');
-  var today = new Date();
-  today.setHours(0, 0, 0, 0);
-  var daysDiff = Math.floor((today - anchor) / 86400000);
-  var autoWeek = Math.floor(daysDiff / 7) + 1;
-  goToWeek(Math.max(1, Math.min(15, autoWeek)));
-})();
+goToWeek(1);
 </script>
 </body>
 </html>
