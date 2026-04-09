@@ -1386,7 +1386,16 @@ function updateHeader() {
 function goToWeek(w) { currentWeek = w; openDate = null; updateHeader(); buildBars(); buildDays(); }
 function changeWeek(d) { const n = currentWeek + d; if (n >= 1 && n <= 15) goToWeek(n); }
 
-goToWeek(1);
+// Auto-detect current week based on today's date
+(function() {
+  const BLOCK_START = new Date('2026-03-16'); // Monday Week 1
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  BLOCK_START.setHours(0, 0, 0, 0);
+  const diffDays = Math.floor((today - BLOCK_START) / (1000 * 60 * 60 * 24));
+  const detectedWeek = Math.min(15, Math.max(1, Math.floor(diffDays / 7) + 1));
+  goToWeek(detectedWeek);
+})();
 </script>
 </body>
 </html>
