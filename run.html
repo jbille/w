@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>Run</title>
+<title>🏃</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -805,21 +805,21 @@ const SCHEDULE = [
 {date:"2026-04-22",day:"Wed",week:6,type:"workout",miles:4.5,
  label:"Norwegian Build — 3×4 min",
  summary:"Warmup · 3×4 min @ Z5 / 3 min jog · cooldown",
- paceTag:"Intervals: 8:00–8:30/mi · HR 164–177",
+ paceTag:"Intervals: 8:10/mi building to 7:55–8:05/mi · HR 164–177",
  file:"wk06_norwegian_3x4.zwo",
  science:"Adding a 3rd interval increases total time at VO2max. Accumulated time at ≥90% HRmax is the key driver of adaptation. 3×4 = 12 min at target intensity.",
  paceRows:[
    ["Warmup 10 min","128–135 bpm","10:30–11:30/mi"],
    ["Z2 buildup 5 min","128–139 bpm","10:00–11:00/mi"],
-   ["Interval 1 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Interval 1 — 4 min","164–177 bpm","8:10/mi — controlled start"],
    ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
-   ["Interval 2 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Interval 2 — 4 min","164–177 bpm","7:55–8:05/mi — build here"],
    ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
-   ["Interval 3 — 4 min","164–177 bpm","8:00–8:30/mi"],
+   ["Interval 3 — 4 min","164–177 bpm","7:55–8:05/mi — hold it"],
    ["Active recovery — 3 min","128–135 bpm","10:30–11:30/mi jog"],
    ["Cooldown 10 min","128–135 bpm","10:30–11:30/mi"],
  ],
- tip:"Start interval 1 at 8:30/mi. If 1 and 2 feel controlled, push interval 3 to 8:15.",warn:null},
+ tip:"Based on your week 5 peak HR of 163, nudge pace up this week. Start interval 1 at 8:10/mi — don't go out hard. If HR is reaching 164–168 by the end of interval 1, hold 7:55–8:05 for intervals 2 and 3. If HR is still under 164, push to 7:50. Weeks 7–9 return to 8:00–8:30 — by then the extra intervals will drive HR naturally.",warn:null},
 
 {date:"2026-04-23",day:"Thu",week:6,type:"strength",miles:0,
  label:"Leg Exercises",summary:"Leg & core strength only",paceTag:null,paceRows:[],tip:null,warn:null},
@@ -1388,7 +1388,7 @@ function changeWeek(d) { const n = currentWeek + d; if (n >= 1 && n <= 15) goToW
 
 // Auto-detect current week based on today's date
 // Week 5 = week of Apr 6; counting back, block counter starts Mar 9
-var blockStart = new Date(2026, 2, 2); // Mar 9 2026 (month is 0-indexed)
+var blockStart = new Date(2026, 2, 9); // Mar 9 2026 (month is 0-indexed)
 var todayDate = new Date();
 todayDate.setHours(0, 0, 0, 0);
 blockStart.setHours(0, 0, 0, 0);
