@@ -1379,4 +1379,23 @@ function updateHeader() {
   const badge = document.getElementById('phase-badge');
   badge.textContent = phase;
   badge.style.cssText = `font-size:11px;padding:2px 8px;border-radius:99px;background:${color}22;color:${color};border:1px solid ${color}44`;
-  document.getElementById('btn-prev').disable
+  document.getElementById('btn-prev').disabled = currentWeek === 1;
+  document.getElementById('btn-next').disabled = currentWeek === 15;
+}
+
+function goToWeek(w) { currentWeek = w; openDate = null; updateHeader(); buildBars(); buildDays(); }
+function changeWeek(d) { const n = currentWeek + d; if (n >= 1 && n <= 15) goToWeek(n); }
+
+// Auto-detect current week based on today's date
+// Week 5 = week of Apr 6; counting back, block counter starts Mar 9
+// Structure: Mon=Recovery+Legs, Tue=Workout, Wed=REST, Thu=Legs, Fri=Easy, Sat=Lift+Legs, Sun=Long
+var blockStart = new Date(2026, 2, 9); // Mar 9 2026 (month is 0-indexed)
+var todayDate = new Date();
+todayDate.setHours(0, 0, 0, 0);
+blockStart.setHours(0, 0, 0, 0);
+var diffDays = Math.floor((todayDate - blockStart) / 86400000);
+var detectedWeek = Math.min(15, Math.max(1, Math.floor(diffDays / 7) + 1));
+goToWeek(detectedWeek);
+</script>
+</body>
+</html>
