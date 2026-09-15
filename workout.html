@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-  <title>Weekly Knee + IT Band Prevention Plan</title>
+  <title>Weekly Knee + IT Band Prevention Plan — Final 4 Weeks</title>
   <link rel="apple-touch-icon" href="workout-icon.png" />
   <link rel="icon" type="image/png" href="workout-icon.png" />
   <meta name="apple-mobile-web-app-title" content="Knee Plan" />
@@ -94,6 +93,46 @@
       margin: 16px 0 8px;
     }
 
+    /* ── PHASE / COUNTDOWN BOX ── */
+    .phase-box {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 4px;
+    }
+
+    .phase-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #92400e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 6px;
+    }
+
+    .phase-box ul {
+      list-style: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      color: #78350f;
+      line-height: 1.55;
+    }
+
+    .phase-box li {
+      padding-left: 16px;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .phase-box li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: #b45309;
+    }
+
+    .phase-box li:last-child { margin-bottom: 0; }
+
     /* ── DAY CARDS ── */
     .day-card {
       background: var(--surface);
@@ -156,6 +195,7 @@
     .badge-run    { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
     .badge-str    { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
     .badge-rest   { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+    .badge-act    { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 
     .day-arrow {
       font-size: 9px;
@@ -316,13 +356,25 @@
 
 <div class="page-header">
   <div class="page-header-inner">
-    <div class="page-eyebrow">Strength &amp; Mobility</div>
-    <div class="page-title">Weekly Knee + IT Band Prevention Plan</div>
-    <div class="page-subtitle">Goal: IT-band "insurance" — pelvic control + knee tracking under fatigue so mile 18–22 mechanics don't fall apart.</div>
+    <div class="page-eyebrow">Strength &amp; Mobility · Final 4 Weeks</div>
+    <div class="page-title">Weekly Knee + IT Band Prevention Plan — Race Prep Edition</div>
+    <div class="page-subtitle">Goal unchanged: pelvic control + knee tracking under fatigue. Mode changed: maintenance, not building. Loads drop to ~70%, Saturday goes bodyweight-only so Sunday long runs start on fresh stabilizers.</div>
   </div>
 </div>
 
 <div class="main">
+
+  <div class="section-label">Race Countdown — how this plan winds down</div>
+
+  <div class="phase-box">
+    <div class="phase-title">🗓 Final 4 weeks</div>
+    <ul>
+      <li><strong>Now → ~2 weeks out:</strong> run this reduced plan as written. All weights ~70% of what you've been lifting — you're maintaining, not building.</li>
+      <li><strong>~10 days before the race:</strong> last session with any weights or machines. After that, bodyweight and bands only.</li>
+      <li><strong>Race week:</strong> Saturday-style activation circuits only (band walks, bridges, leg swings). Nothing that leaves you sore.</li>
+      <li><strong>Every week:</strong> Saturday stays bodyweight-only — the loaded glute-med work now lives on Tuesday, three days clear of the long run.</li>
+    </ul>
+  </div>
 
   <div class="section-label">Daily Schedule — tap to expand · strength days have a Home / Gym toggle</div>
 
@@ -338,7 +390,7 @@
       <div class="day-arrow">▼</div>
     </div>
     <div class="day-body">
-      <p class="day-plain">Run as planned.</p>
+      <p class="day-plain">Run as planned. Fuel from 35–40 min in, every 30–35 min after. Ten-minute walk when you're done.</p>
     </div>
   </div>
 
@@ -348,7 +400,7 @@
       <div class="day-dot" style="background:#7c3aed"></div>
       <div class="day-header-text">
         <div class="day-name">Monday</div>
-        <div class="day-subtitle">Adductors &amp; Hamstrings + Hip Stability + Lower Back</div>
+        <div class="day-subtitle">Adductors &amp; Hamstrings + Hip Stability + Lower Back · ~70% loads</div>
       </div>
       <span class="day-badge badge-str">Strength</span>
       <div class="day-arrow">▼</div>
@@ -389,7 +441,7 @@
       <div class="mode-home" style="display:none">
 
         <div class="ex-group">
-          <div class="ex-group-title">Strength</div>
+          <div class="ex-group-title">Strength — control moves full volume, loaded moves lighter</div>
           <div class="ex-item">
             <div class="ex-num">1</div>
             <div class="ex-content">
@@ -401,7 +453,7 @@
             <div class="ex-num">2</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=7j-2w4-P14I" target="_blank" rel="noopener">Romanian Deadlift</a>
-              <div class="ex-dose"><strong>3×10</strong> · light DB/KB ok</div>
+              <div class="ex-dose"><strong>3×10</strong> · DB/KB at <strong>~70%</strong> of what you've been using <span class="muted">· maintenance, not PRs</span></div>
             </div>
           </div>
           <div class="ex-item">
@@ -415,7 +467,7 @@
             <div class="ex-num">4</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=3OwttGWEOB8" target="_blank" rel="noopener">Hip Hike</a>
-              <div class="ex-dose"><strong>2×10/side</strong> · slow and controlled</div>
+              <div class="ex-dose"><strong>2×10/side</strong> · slow and controlled <span class="muted">· full volume — this is the cheap stuff that protects your hips at mile 20</span></div>
             </div>
           </div>
           <div class="ex-item">
@@ -442,43 +494,43 @@
 
       <!-- MON: GYM ALTERNATIVE -->
       <div class="mode-gym">
-        <p class="mode-note">Gym alternative — machines let you load the hamstrings and adductors properly. 2 min rest between strength sets.</p>
+        <p class="mode-note">Gym alternative — same machines, lighter intent. All loads ~70% of your usual; leave 3+ reps in the tank on every set. 2 min rest between sets. Bulgarian split squats are gone until after the race — highest soreness cost per benefit of anything in the plan.</p>
 
         <div class="ex-group">
-          <div class="ex-group-title">Strength</div>
+          <div class="ex-group-title">Strength — control moves full volume, loaded moves lighter</div>
           <div class="ex-item">
             <div class="ex-num">1</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=barbell+romanian+deadlift+form" target="_blank" rel="noopener">Barbell Romanian Deadlift</a>
-              <div class="ex-dose"><strong>3×8</strong> · heavier than home DB version <span class="muted">· hinge, flat back, bar close to legs</span></div>
+              <div class="ex-dose"><strong>3×8</strong> at <strong>~70%</strong> of your usual bar weight <span class="muted">· hinge, flat back, bar close to legs</span></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">2</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=lying+leg+curl+machine+form" target="_blank" rel="noopener">Lying or Seated Leg Curl</a>
-              <div class="ex-dose"><strong>3×10–12</strong> · slow 3-sec lowering <span class="muted">· replaces swiss ball curl</span></div>
+              <div class="ex-dose"><strong>3×10</strong> · lighter than usual, slow 3-sec lowering</div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">3</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=hip+adduction+machine+form" target="_blank" rel="noopener">Hip Adduction Machine</a>
-              <div class="ex-dose"><strong>3×12–15</strong> <span class="muted">· replaces Copenhagen plank · full squeeze, control the return</span></div>
+              <div class="ex-dose"><strong>3×12</strong> · moderate <span class="muted">· full squeeze, control the return</span></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">4</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=barbell+hip+thrust+form" target="_blank" rel="noopener">Barbell Hip Thrust</a>
-              <div class="ex-dose"><strong>3×8–10</strong> · bench + barbell (pad the bar) <span class="muted">· replaces single-leg glute bridge · Smith machine works too</span></div>
+              <div class="ex-dose"><strong>3×8</strong> at <strong>~70%</strong> · bench + barbell (pad the bar) <span class="muted">· Smith machine works too</span></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">5</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/results?search_query=dumbbell+bulgarian+split+squat+form" target="_blank" rel="noopener">DB Bulgarian Split Squat</a>
-              <div class="ex-dose"><strong>3×8/side</strong> · dumbbells at sides <span class="muted">· keep knee tracking over toes</span></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Single-Leg Glute Bridge</a>
+              <div class="ex-dose"><strong>2×10/leg</strong> · bodyweight <span class="muted">· replaces Bulgarian split squat — keeps the single-leg pattern without the two-day soreness bill</span></div>
             </div>
           </div>
         </div>
@@ -489,7 +541,7 @@
             <div class="ex-num">1</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=45+degree+back+extension+form" target="_blank" rel="noopener">45° Back Extension (Roman Chair)</a>
-              <div class="ex-dose"><strong>3×10–12</strong> <span class="muted">· replaces stability ball version · hug a plate once bodyweight feels easy</span></div>
+              <div class="ex-dose"><strong>3×10–12</strong> · bodyweight only <span class="muted">· hold the plate progression until after the race</span></div>
             </div>
           </div>
         </div>
@@ -548,7 +600,7 @@
       <div class="day-dot" style="background:#7c3aed"></div>
       <div class="day-header-text">
         <div class="day-name">Tuesday</div>
-        <div class="day-subtitle">Easy Run + Glutes &amp; Knee + IT Band + Lower Back &amp; Calves</div>
+        <div class="day-subtitle">Easy Run + Knee + Glute Med (moved from Sat) + Lower Back &amp; Calves</div>
       </div>
       <span class="day-badge badge-str">Strength</span>
       <div class="day-arrow">▼</div>
@@ -621,8 +673,15 @@
           <div class="ex-item">
             <div class="ex-num">5</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=Yr4VIVYWp10" target="_blank" rel="noopener">Spanish Squat</a>
-              <div class="ex-dose"><strong>3×10</strong> · 2-sec hold</div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=QjKyGqrAaP4" target="_blank" rel="noopener">Clamshells (with band)</a>
+              <div class="ex-dose"><strong>3×15/side</strong> <span class="muted">· moved from Saturday — glute med work now lives here, 3 days clear of the long run</span></div>
+            </div>
+          </div>
+          <div class="ex-item">
+            <div class="ex-num">6</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/watch?v=edTXNT-etYc" target="_blank" rel="noopener">Side Plank with Top-Leg Raise</a>
+              <div class="ex-dose"><strong>2×10/side</strong> <span class="muted">· moved from Saturday</span></div>
             </div>
           </div>
         </div>
@@ -653,7 +712,7 @@
 
       <!-- TUE: GYM ALTERNATIVE -->
       <div class="mode-gym">
-        <p class="mode-note">Gym alternative — same movement patterns, loaded heavier. 2 min rest between strength sets.</p>
+        <p class="mode-note">Gym alternative — Saturday's loaded glute-med work (abduction machine, weighted side-lying abduction) now lives here. Loaded moves at ~70%; the Spanish squat and TKE are covered by the leg extension. 2 min rest between strength sets.</p>
 
         <div class="ex-group">
           <div class="ex-group-title">Strength</div>
@@ -661,21 +720,35 @@
             <div class="ex-num">1</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=leg+press+proper+form" target="_blank" rel="noopener">Leg Press</a>
-              <div class="ex-dose"><strong>3×10</strong> · moderate weight, feet mid-platform <span class="muted">· don't lock knees at top · replaces box squat</span></div>
+              <div class="ex-dose"><strong>3×10</strong> at <strong>~70%</strong> · feet mid-platform <span class="muted">· don't lock knees at top · replaces box squat</span></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">2</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=leg+extension+machine+form" target="_blank" rel="noopener">Leg Extension Machine</a>
-              <div class="ex-dose"><strong>3×12–15</strong> · light-moderate, slow lowering <span class="muted">· replaces TKE + Spanish squat · skip last 15° of bend if kneecap complains</span></div>
+              <div class="ex-dose"><strong>3×12–15</strong> · light, slow lowering <span class="muted">· replaces TKE + Spanish squat · skip last 15° of bend if kneecap complains</span></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">3</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank" rel="noopener">Single-Leg Toe Touch</a>
-              <div class="ex-dose"><strong>3×8/side</strong> · hold a light DB <span class="muted">· keep this one — no machine trains balance</span></div>
+              <div class="ex-dose"><strong>3×8/side</strong> · light DB <span class="muted">· keep this one — no machine trains balance</span></div>
+            </div>
+          </div>
+          <div class="ex-item">
+            <div class="ex-num">4</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/results?search_query=hip+abduction+machine+form" target="_blank" rel="noopener">Hip Abduction Machine</a>
+              <div class="ex-dose"><strong>3×12–15</strong> at <strong>~70%</strong> <span class="muted">· moved from Saturday · lean slightly forward to bias glute med · 2-sec hold at the widest point</span></div>
+            </div>
+          </div>
+          <div class="ex-item">
+            <div class="ex-num">5</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/results?search_query=weighted+side+lying+hip+abduction+form" target="_blank" rel="noopener">Weighted Side-Lying Hip Abduction</a>
+              <div class="ex-dose"><strong>2×12/side</strong> · light DB/plate on outer thigh <span class="muted">· moved from Saturday · slow 3-sec lowering · toes pointed slightly down</span></div>
             </div>
           </div>
         </div>
@@ -686,7 +759,7 @@
             <div class="ex-num">1</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=cable+pull+through+form" target="_blank" rel="noopener">Cable Pull-Through</a>
-              <div class="ex-dose"><strong>3×10–12</strong> <span class="muted">· smoother resistance than the band version</span></div>
+              <div class="ex-dose"><strong>3×10–12</strong> at <strong>~70%</strong> <span class="muted">· smoother resistance than the band version</span></div>
             </div>
           </div>
         </div>
@@ -794,19 +867,19 @@
       <div class="day-arrow">▼</div>
     </div>
     <div class="day-body">
-      <p class="day-plain">Run as planned.</p>
+      <p class="day-plain">Run as planned. Truly conversational — full sentences, not fragments.</p>
     </div>
   </div>
 
   <!-- SATURDAY -->
   <div class="day-card" id="day-sat">
     <div class="day-header" onclick="toggle('day-sat')">
-      <div class="day-dot" style="background:#7c3aed"></div>
+      <div class="day-dot" style="background:#16a34a"></div>
       <div class="day-header-text">
         <div class="day-name">Saturday</div>
-        <div class="day-subtitle">Glute Medius &amp; Balance + Lower Back</div>
+        <div class="day-subtitle">Pre-Long-Run Activation · bodyweight only · ~10 min</div>
       </div>
-      <span class="day-badge badge-str">Strength</span>
+      <span class="day-badge badge-act">Activation</span>
       <div class="day-arrow">▼</div>
     </div>
     <div class="day-body">
@@ -816,171 +889,98 @@
         <button class="mode-btn active" data-mode="gym" onclick="setMode('day-sat','gym')">🏋️ Gym</button>
       </div>
 
-      <div class="ex-group">
-        <div class="ex-group-title">Warm-Up (both versions)</div>
-        <div class="ex-item">
-          <div class="ex-num">1</div>
-          <div class="ex-content">
-            <a class="ex-link" href="https://www.youtube.com/watch?v=6eoK_yxY8Ak" target="_blank" rel="noopener">Mini Band Lateral Walk</a>
-            <div class="ex-dose"><strong>2×10</strong> each way</div>
-          </div>
-        </div>
-        <div class="ex-item">
-          <div class="ex-num">2</div>
-          <div class="ex-content">
-            <a class="ex-link" href="https://www.youtube.com/watch?v=U3HlEF_E9fo" target="_blank" rel="noopener">Side Leg Swings</a>
-            <div class="ex-dose"><strong>10/side</strong></div>
-          </div>
-        </div>
-        <div class="ex-item">
-          <div class="ex-num">3</div>
-          <div class="ex-content">
-            <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
-            <div class="ex-dose"><strong>2×10</strong></div>
-          </div>
-        </div>
-      </div>
-
       <!-- SAT: HOME VERSION -->
       <div class="mode-home" style="display:none">
+        <p class="mode-note">Why the change: the old Saturday session fatigued your pelvic stabilizers ~18 hours before asking them to hold you level for 15–18 miles. Now Sunday starts on fresh hips. The loaded glute-med work moved to Tuesday.</p>
 
         <div class="ex-group">
-          <div class="ex-group-title">Strength</div>
+          <div class="ex-group-title">Activation Circuit — repeat 2×, no weights, nothing to failure</div>
           <div class="ex-item">
             <div class="ex-num">1</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=QjKyGqrAaP4" target="_blank" rel="noopener">Clamshells (with band)</a>
-              <div class="ex-dose"><strong>3×15/side</strong></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=6eoK_yxY8Ak" target="_blank" rel="noopener">Mini Band Lateral Walk</a>
+              <div class="ex-dose"><strong>10</strong> each way</div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">2</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank" rel="noopener">Single-Leg RDL</a>
-              <div class="ex-dose"><strong>3×8/leg</strong></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
+              <div class="ex-dose"><strong>12</strong></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">3</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=BzeSd1aycCw" target="_blank" rel="noopener">Star Balance Reach</a>
-              <div class="ex-dose"><strong>2×5/leg</strong></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=3OwttGWEOB8" target="_blank" rel="noopener">Hip Hike</a>
+              <div class="ex-dose"><strong>10/side</strong> · slow and controlled</div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">4</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=edTXNT-etYc" target="_blank" rel="noopener">Side Plank with Top-Leg Raise</a>
-              <div class="ex-dose"><strong>2×10/side</strong></div>
-            </div>
-          </div>
-          <div class="ex-item">
-            <div class="ex-num">5</div>
-            <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=iTdhzEwvuc8" target="_blank" rel="noopener">Supported Hip Airplanes</a>
-              <div class="ex-dose"><strong>3×5/side</strong></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=Z9_ThjKQyOg" target="_blank" rel="noopener">Single-Leg Balance Hold</a>
+              <div class="ex-dose"><strong>30s/side</strong></div>
             </div>
           </div>
         </div>
 
-        <div class="ex-group">
-          <div class="ex-group-title">Lower Back</div>
+        <div class="ex-group" style="margin-top:14px">
+          <div class="ex-group-title">Optional Cool-Down</div>
           <div class="ex-item">
             <div class="ex-num">1</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=ph3pddpKzzw" target="_blank" rel="noopener">Back Extension (Glute Focus)</a>
-              <div class="ex-dose">
-                <strong>Week 1–2:</strong> 4×10–15 sec hold<br>
-                <strong>Week 3–4:</strong> 3×10 reps<br>
-                <strong>Week 5+:</strong> 3×12–15 reps
-              </div>
-              <div class="ex-dose">
-                Tips: pad at hip crease · slight upper-back round · squeeze glutes · stop when body is straight (no arch)
-              </div>
+              <div class="ex-link" style="color:var(--text2);cursor:default">Piriformis + lateral hip stretch</div>
+              <div class="ex-dose"><strong>1×30s/side</strong> · gentle</div>
             </div>
           </div>
         </div>
-
       </div>
 
       <!-- SAT: GYM ALTERNATIVE -->
       <div class="mode-gym">
-        <p class="mode-note">Gym alternative — the abduction machine and cables hit the glute med harder than bands can.</p>
+        <p class="mode-note">Same circuit as home — even at the gym, leave the machines alone the day before a long run. The abduction machine and weighted work now live on Tuesday, three days clear of Sunday.</p>
 
         <div class="ex-group">
-          <div class="ex-group-title">Strength</div>
+          <div class="ex-group-title">Activation Circuit — repeat 2×, no weights, nothing to failure</div>
           <div class="ex-item">
             <div class="ex-num">1</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/results?search_query=hip+abduction+machine+form" target="_blank" rel="noopener">Hip Abduction Machine</a>
-              <div class="ex-dose"><strong>3×12–15</strong> <span class="muted">· replaces clamshells · lean slightly forward to bias glute med · 2-sec hold at the widest point</span></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=6eoK_yxY8Ak" target="_blank" rel="noopener">Mini Band Lateral Walk</a>
+              <div class="ex-dose"><strong>10</strong> each way</div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">2</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank" rel="noopener">DB Single-Leg RDL</a>
-              <div class="ex-dose"><strong>3×8/leg</strong> · dumbbell in opposite hand <span class="muted">· loaded version of the home move</span></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Glute Bridges</a>
+              <div class="ex-dose"><strong>12</strong></div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">3</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/results?search_query=weighted+side+lying+hip+abduction+form" target="_blank" rel="noopener">Weighted Side-Lying Hip Abduction</a>
-              <div class="ex-dose"><strong>2×12/side</strong> · DB or plate resting on outer thigh <span class="muted">· slow 3-sec lowering · toes pointed slightly down to keep it on the glute med</span></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=3OwttGWEOB8" target="_blank" rel="noopener">Hip Hike</a>
+              <div class="ex-dose"><strong>10/side</strong> · slow and controlled</div>
             </div>
           </div>
           <div class="ex-item">
             <div class="ex-num">4</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/results?search_query=dumbbell+lateral+lunge+form" target="_blank" rel="noopener">DB Lateral Lunge</a>
-              <div class="ex-dose"><strong>2×8/side</strong> · goblet hold <span class="muted">· side-to-side strength you can't easily load at home</span></div>
-            </div>
-          </div>
-          <div class="ex-item">
-            <div class="ex-num">5</div>
-            <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=iTdhzEwvuc8" target="_blank" rel="noopener">Supported Hip Airplanes</a>
-              <div class="ex-dose"><strong>3×5/side</strong> <span class="muted">· keep this one — no machine trains pelvic rotation control</span></div>
+              <a class="ex-link" href="https://www.youtube.com/watch?v=Z9_ThjKQyOg" target="_blank" rel="noopener">Single-Leg Balance Hold</a>
+              <div class="ex-dose"><strong>30s/side</strong></div>
             </div>
           </div>
         </div>
 
-        <div class="ex-group">
-          <div class="ex-group-title">Lower Back</div>
+        <div class="ex-group" style="margin-top:14px">
+          <div class="ex-group-title">Optional Cool-Down</div>
           <div class="ex-item">
             <div class="ex-num">1</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=ph3pddpKzzw" target="_blank" rel="noopener">Back Extension (Glute Focus) — Roman Chair</a>
-              <div class="ex-dose">
-                Same progression as home:<br>
-                <strong>Week 1–2:</strong> 4×10–15 sec hold<br>
-                <strong>Week 3–4:</strong> 3×10 reps<br>
-                <strong>Week 5+:</strong> 3×12–15 reps · then hug a plate to progress
-              </div>
-              <div class="ex-dose">
-                Tips: pad at hip crease · slight upper-back round · squeeze glutes · stop when body is straight (no arch)
-              </div>
+              <div class="ex-link" style="color:var(--text2);cursor:default">Piriformis + lateral hip stretch</div>
+              <div class="ex-dose"><strong>1×30s/side</strong> · gentle</div>
             </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="ex-group" style="margin-top:14px">
-        <div class="ex-group-title">Cool-Down (both versions)</div>
-        <div class="ex-item">
-          <div class="ex-num">1</div>
-          <div class="ex-content">
-            <div class="ex-link" style="color:var(--text2);cursor:default">Piriformis + lateral hip stretch</div>
-            <div class="ex-dose"><strong>2×30s/side</strong></div>
-          </div>
-        </div>
-        <div class="ex-item">
-          <div class="ex-num">2</div>
-          <div class="ex-content">
-            <div class="ex-link" style="color:var(--text2);cursor:default">Foam roll glutes</div>
-            <div class="ex-dose"><strong>2–3 min</strong></div>
           </div>
         </div>
       </div>
