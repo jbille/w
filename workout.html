@@ -346,6 +346,47 @@
       font-style: italic;
     }
 
+    /* ── CHECKBOXES ── */
+    .ex-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 1px;
+      margin-left: 4px;
+      cursor: pointer;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .ex-check:checked {
+      background: #16a34a;
+      border-color: #16a34a;
+    }
+
+    .ex-check:checked::after {
+      content: "✓";
+      color: #fff;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .ex-item.done .ex-link { color: var(--text3); }
+    .ex-item.done .ex-dose { opacity: 0.55; }
+    .ex-item.done .ex-num { opacity: 0.55; }
+
     /* ── SAFE AREA ── */
     @supports (padding-bottom: env(safe-area-inset-bottom)) {
       .main { padding-bottom: calc(52px + env(safe-area-inset-bottom)); }
@@ -376,7 +417,7 @@
     </ul>
   </div>
 
-  <div class="section-label">Daily Schedule — tap to expand · strength days have a Home / Gym toggle</div>
+  <div class="section-label">Daily Schedule — tap to expand · check off as you go · checks reset each Sunday</div>
 
   <!-- SUNDAY -->
   <div class="day-card" id="day-sun">
@@ -400,7 +441,7 @@
       <div class="day-dot" style="background:#7c3aed"></div>
       <div class="day-header-text">
         <div class="day-name">Monday</div>
-        <div class="day-subtitle">Adductors &amp; Hamstrings + Hip Stability + Lower Back · ~70% loads</div>
+        <div class="day-subtitle">Adductors &amp; Hamstrings + Knee + Hip Stability + Lower Back · ~70% loads</div>
       </div>
       <span class="day-badge badge-str">Strength</span>
       <div class="day-arrow">▼</div>
@@ -477,6 +518,13 @@
               <div class="ex-dose"><strong>2×10/leg</strong></div>
             </div>
           </div>
+          <div class="ex-item">
+            <div class="ex-num">6</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank" rel="noopener">Single-Leg Toe Touch</a>
+              <div class="ex-dose"><strong>3×8/side</strong> <span class="muted">· moved from Tuesday</span></div>
+            </div>
+          </div>
         </div>
 
         <div class="ex-group">
@@ -494,7 +542,7 @@
 
       <!-- MON: GYM ALTERNATIVE -->
       <div class="mode-gym">
-        <p class="mode-note">Gym alternative — same machines, lighter intent. All loads ~70% of your usual; leave 3+ reps in the tank on every set. 2 min rest between sets. Bulgarian split squats are gone until after the race — highest soreness cost per benefit of anything in the plan.</p>
+        <p class="mode-note">Gym alternative — same machines, lighter intent. All loads ~70% of your usual; leave 3+ reps in the tank on every set. 2 min rest between sets. Leg extension and toe touch moved here from Tuesday to keep run days short.</p>
 
         <div class="ex-group">
           <div class="ex-group-title">Strength — control moves full volume, loaded moves lighter</div>
@@ -529,8 +577,22 @@
           <div class="ex-item">
             <div class="ex-num">5</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=egs6m4J8u8c" target="_blank" rel="noopener">Single-Leg Glute Bridge</a>
-              <div class="ex-dose"><strong>2×10/leg</strong> · bodyweight <span class="muted">· replaces Bulgarian split squat — keeps the single-leg pattern without the two-day soreness bill</span></div>
+              <a class="ex-link" href="https://www.youtube.com/results?search_query=dumbbell+bulgarian+split+squat+form" target="_blank" rel="noopener">DB Bulgarian Split Squat</a>
+              <div class="ex-dose"><strong>3×8/side</strong> · light DBs — well below your usual <span class="muted">· keep knee tracking over toes · if hips are still sore the next day, go bodyweight only</span></div>
+            </div>
+          </div>
+          <div class="ex-item">
+            <div class="ex-num">6</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/results?search_query=leg+extension+machine+form" target="_blank" rel="noopener">Leg Extension Machine</a>
+              <div class="ex-dose"><strong>3×12–15</strong> · light, slow lowering <span class="muted">· moved from Tuesday · skip last 15° of bend if kneecap complains</span></div>
+            </div>
+          </div>
+          <div class="ex-item">
+            <div class="ex-num">7</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank" rel="noopener">Single-Leg Toe Touch</a>
+              <div class="ex-dose"><strong>3×8/side</strong> · light DB <span class="muted">· moved from Tuesday · keep this one — no machine trains balance</span></div>
             </div>
           </div>
         </div>
@@ -542,6 +604,17 @@
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=45+degree+back+extension+form" target="_blank" rel="noopener">45° Back Extension (Roman Chair)</a>
               <div class="ex-dose"><strong>3×10–12</strong> · bodyweight only <span class="muted">· hold the plate progression until after the race</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex-group">
+          <div class="ex-group-title">Core</div>
+          <div class="ex-item">
+            <div class="ex-num">1</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/results?search_query=captains+chair+knee+raise+form" target="_blank" rel="noopener">Captain's Chair Knee Raise</a>
+              <div class="ex-dose"><strong>3×10–15</strong> · slow, no swinging <span class="muted">· curl pelvis toward ribs at the top to bias abs over hip flexors · if the front of the hip complains, cut reps or skip</span></div>
             </div>
           </div>
         </div>
@@ -600,7 +673,7 @@
       <div class="day-dot" style="background:#7c3aed"></div>
       <div class="day-header-text">
         <div class="day-name">Tuesday</div>
-        <div class="day-subtitle">Easy Run + Knee + Glute Med (moved from Sat) + Lower Back &amp; Calves</div>
+        <div class="day-subtitle">Easy Run + Glute Med + Lower Back &amp; Calves · trimmed for run-day time</div>
       </div>
       <span class="day-badge badge-str">Strength</span>
       <div class="day-arrow">▼</div>
@@ -652,33 +725,26 @@
           <div class="ex-item">
             <div class="ex-num">2</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank" rel="noopener">Single-Leg Toe Touch</a>
-              <div class="ex-dose"><strong>3×8/side</strong></div>
-            </div>
-          </div>
-          <div class="ex-item">
-            <div class="ex-num">3</div>
-            <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=gDE83dy8mNA" target="_blank" rel="noopener">Forward Step-Down</a>
               <div class="ex-dose"><strong>3×6–8/side</strong> · 6–8" step</div>
             </div>
           </div>
           <div class="ex-item">
-            <div class="ex-num">4</div>
+            <div class="ex-num">3</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=7xG3MeoLjC0" target="_blank" rel="noopener">Terminal Knee Extensions (TKE)</a>
               <div class="ex-dose"><strong>3×15/leg</strong></div>
             </div>
           </div>
           <div class="ex-item">
-            <div class="ex-num">5</div>
+            <div class="ex-num">4</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=QjKyGqrAaP4" target="_blank" rel="noopener">Clamshells (with band)</a>
               <div class="ex-dose"><strong>3×15/side</strong> <span class="muted">· moved from Saturday — glute med work now lives here, 3 days clear of the long run</span></div>
             </div>
           </div>
           <div class="ex-item">
-            <div class="ex-num">6</div>
+            <div class="ex-num">5</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/watch?v=edTXNT-etYc" target="_blank" rel="noopener">Side Plank with Top-Leg Raise</a>
               <div class="ex-dose"><strong>2×10/side</strong> <span class="muted">· moved from Saturday</span></div>
@@ -712,7 +778,7 @@
 
       <!-- TUE: GYM ALTERNATIVE -->
       <div class="mode-gym">
-        <p class="mode-note">Gym alternative — Saturday's loaded glute-med work (abduction machine, weighted side-lying abduction) now lives here. Loaded moves at ~70%; the Spanish squat and TKE are covered by the leg extension. 2 min rest between strength sets.</p>
+        <p class="mode-note">Gym alternative — trimmed for run-day time: leg extension and toe touch moved to Monday. Saturday's loaded glute-med work (abduction machine, weighted side-lying abduction) lives here at ~70%. 2 min rest between strength sets.</p>
 
         <div class="ex-group">
           <div class="ex-group-title">Strength</div>
@@ -726,26 +792,12 @@
           <div class="ex-item">
             <div class="ex-num">2</div>
             <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/results?search_query=leg+extension+machine+form" target="_blank" rel="noopener">Leg Extension Machine</a>
-              <div class="ex-dose"><strong>3×12–15</strong> · light, slow lowering <span class="muted">· replaces TKE + Spanish squat · skip last 15° of bend if kneecap complains</span></div>
-            </div>
-          </div>
-          <div class="ex-item">
-            <div class="ex-num">3</div>
-            <div class="ex-content">
-              <a class="ex-link" href="https://www.youtube.com/watch?v=eGyIZC6HKBE" target="_blank" rel="noopener">Single-Leg Toe Touch</a>
-              <div class="ex-dose"><strong>3×8/side</strong> · light DB <span class="muted">· keep this one — no machine trains balance</span></div>
-            </div>
-          </div>
-          <div class="ex-item">
-            <div class="ex-num">4</div>
-            <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=hip+abduction+machine+form" target="_blank" rel="noopener">Hip Abduction Machine</a>
               <div class="ex-dose"><strong>3×12–15</strong> at <strong>~70%</strong> <span class="muted">· moved from Saturday · lean slightly forward to bias glute med · 2-sec hold at the widest point</span></div>
             </div>
           </div>
           <div class="ex-item">
-            <div class="ex-num">5</div>
+            <div class="ex-num">3</div>
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=weighted+side+lying+hip+abduction+form" target="_blank" rel="noopener">Weighted Side-Lying Hip Abduction</a>
               <div class="ex-dose"><strong>2×12/side</strong> · light DB/plate on outer thigh <span class="muted">· moved from Saturday · slow 3-sec lowering · toes pointed slightly down</span></div>
@@ -771,6 +823,17 @@
             <div class="ex-content">
               <a class="ex-link" href="https://www.youtube.com/results?search_query=calf+raise+machine+form" target="_blank" rel="noopener">Machine Calf Raise (standing or leg-press)</a>
               <div class="ex-dose"><strong>3×12–15</strong> · full stretch at bottom, pause at top</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex-group">
+          <div class="ex-group-title">Core</div>
+          <div class="ex-item">
+            <div class="ex-num">1</div>
+            <div class="ex-content">
+              <a class="ex-link" href="https://www.youtube.com/results?search_query=captains+chair+knee+raise+form" target="_blank" rel="noopener">Captain's Chair Knee Raise</a>
+              <div class="ex-dose"><strong>3×10–15</strong> · slow, no swinging <span class="muted">· curl pelvis toward ribs at the top to bias abs over hip flexors · if the front of the hip complains, cut reps or skip</span></div>
             </div>
           </div>
         </div>
@@ -1010,6 +1073,65 @@
   const days = ['day-sun','day-mon','day-tue','day-wed','day-thu','day-fri','day-sat'];
   const el = document.getElementById(days[new Date().getDay()]);
   if (el) el.classList.add('open');
+
+  // ── Checkboxes with weekly reset ──
+  (function () {
+    const WEEK_KEY = 'kneeplan-week';
+    const CHECK_KEY = 'kneeplan-checks';
+
+    // Week id = date of the most recent Sunday (week starts Sunday, like the plan)
+    function weekId() {
+      const now = new Date();
+      const sun = new Date(now);
+      sun.setHours(0, 0, 0, 0);
+      sun.setDate(now.getDate() - now.getDay());
+      return sun.getFullYear() + '-' +
+        String(sun.getMonth() + 1).padStart(2, '0') + '-' +
+        String(sun.getDate()).padStart(2, '0');
+    }
+
+    let saved = {};
+    try {
+      if (localStorage.getItem(WEEK_KEY) === weekId()) {
+        saved = JSON.parse(localStorage.getItem(CHECK_KEY) || '{}') || {};
+      } else {
+        // New week — clear old checks
+        localStorage.removeItem(CHECK_KEY);
+      }
+    } catch (e) { /* storage unavailable — checkboxes still work, just won't persist */ }
+
+    function persist() {
+      try {
+        localStorage.setItem(WEEK_KEY, weekId());
+        localStorage.setItem(CHECK_KEY, JSON.stringify(saved));
+      } catch (e) { /* ignore */ }
+    }
+
+    document.querySelectorAll('.day-card').forEach(function (card) {
+      const counts = {};
+      card.querySelectorAll('.ex-item').forEach(function (item) {
+        const nameEl = item.querySelector('.ex-link');
+        const name = (nameEl ? nameEl.textContent : 'item').trim();
+        counts[name] = (counts[name] || 0) + 1;
+        const id = card.id + '|' + name + '|' + counts[name];
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'ex-check';
+        cb.setAttribute('aria-label', 'Done: ' + name);
+        cb.checked = !!saved[id];
+        if (cb.checked) item.classList.add('done');
+
+        cb.addEventListener('change', function () {
+          if (cb.checked) { saved[id] = true; } else { delete saved[id]; }
+          item.classList.toggle('done', cb.checked);
+          persist();
+        });
+
+        item.appendChild(cb);
+      });
+    });
+  })();
 </script>
 
 </body>
