@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🏃</title>
+<meta name="apple-mobile-web-app-title" content="🏃">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0d14">
+<link rel="apple-touch-icon" href="workout-icon.png">
+<style>
+/* Layout: one-column phone app. Sticky week bar, a 17-week mileage strip, then tap-to-expand day cards. Dark single theme by choice. */
+:root{
+  color-scheme: dark;
+  --bg:#0a0d14;
+  --surface:#111621;
+  --sunk:#0c1018;
+  --line:#1e2635;
+  --line-soft:#161d2a;
+  --fg:#e7ecf3;
+  --fg2:#a6b1c3;
+  --fg3:#6b778c;
+  --accent:#7dd3fc;
+  --easy:#6ee7b7;
+  --work:#fbbf24;
+  --long:#7dd3fc;
+  --lift:#c4b5fd;
+  --off:#64748b;
+  --walk:#94a3b8;
+  --done:#22c55e;
+  --caution:#fca5a5;
+  --ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --num:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--ui);-webkit-font-smoothing:antialiased;min-height:100vh;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:60}
+[hidden]{display:none!important}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tab{font-variant-numeric:tabular-nums}
+
+/* Header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(10,13,20,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hdr{display:flex;align-items:center;gap:10px;padding-block:10px}
+.hdr-main{flex:1;min-width:0}
+.hdr-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.hdr-week{font-size:19px;font-weight:700;letter-spacing:-.2px}
+.hdr-dates{font-size:13px;color:var(--fg2)}
+.hdr-sub{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:3px;font-size:12px;color:var(--fg2)}
+.chip{font-size:11px;font-weight:600;padding:1px 8px;border-radius:99px;border:1px solid currentColor;white-space:nowrap;line-height:1.5}
+.nav{display:flex;gap:6px;flex-shrink:0}
+.nav button{min-width:40px;min-height:40px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:15px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.nav button:active{background:var(--line)}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav .today-btn{font-size:12px;font-weight:600;color:var(--accent)}
+
+main{padding-block:14px 48px;display:flex;flex-direction:column;gap:12px}
+
+/* Mileage strip */
+.strip{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px}
+.strip-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--fg3)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:0}
+.bars{display:grid;grid-template-columns:repeat(17,1fr);gap:3px;align-items:end;height:74px}
+.bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0;min-width:0}
+.bar span.b{width:100%;border-radius:3px 3px 1px 1px;background:var(--c);opacity:.75;transition:opacity .15s}
+.bar.cut span.b{opacity:.38}
+.bar.sel span.b{opacity:1;box-shadow:0 0 0 1.5px var(--fg) inset}
+.bar small{font-size:9px;color:var(--fg3);line-height:1}
+.bar.sel small{color:var(--fg);font-weight:700}
+.bar.now small{color:var(--accent)}
+
+/* Week note */
+.note{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:14px;color:var(--fg2)}
+.note b{color:var(--fg)}
+
+/* Day cards */
+.days{display:flex;flex-direction:column;gap:7px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.day.is-today{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.day-head{display:flex;align-items:center;gap:11px;width:100%;padding:11px 12px;background:none;border:0;text-align:left;cursor:pointer;min-height:62px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.day-head:active{background:var(--sunk)}
+.stripe{width:4px;align-self:stretch;border-radius:4px;background:var(--c);flex-shrink:0}
+.d-date{width:44px;flex-shrink:0;display:flex;flex-direction:column;line-height:1.2}
+.d-date b{font-size:14px}
+.d-date small{font-size:11px;color:var(--fg3)}
+.d-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.d-label{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.d-sum{font-size:12px;color:var(--fg2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.today-tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:0 6px;border-radius:99px}
+.d-right{flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.d-miles{font-size:17px;font-weight:700}
+.d-miles small{font-size:11px;font-weight:500;color:var(--fg3);margin-left:2px}
+.d-prog{font-size:11px;color:var(--fg3)}
+.d-prog.all{color:var(--done);font-weight:600}
+.day-body{border-top:1px solid var(--line-soft);padding:12px 12px 14px;display:flex;flex-direction:column;gap:14px}
+
+.callout{font-size:13px;color:var(--work);background:color-mix(in srgb,var(--work) 9%,transparent);border:1px solid color-mix(in srgb,var(--work) 30%,transparent);border-radius:9px;padding:8px 10px}
+.callout.lift{color:var(--lift);background:color-mix(in srgb,var(--lift) 9%,transparent);border-color:color-mix(in srgb,var(--lift) 30%,transparent)}
+.tip{font-size:13px;color:var(--fg2);border-left:2px solid var(--line);padding-left:10px}
+.tip b{color:var(--fg)}
+
+.group-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3);padding-bottom:6px;border-bottom:1px solid var(--line-soft);margin-bottom:2px;display:flex;justify-content:space-between;gap:8px}
+.group-title em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:500}
+.group-note{font-size:12px;color:var(--fg3);font-style:italic;margin:6px 0 2px}
+
+.item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--line-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.item:last-child{border-bottom:0}
+.item-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.item-name{font-size:14px;font-weight:600;color:var(--fg)}
+.item-name a{color:var(--accent);text-decoration:none}
+.item-name a:hover{text-decoration:underline}
+.new{font-size:10px;font-weight:700;color:var(--bg);background:var(--lift);border-radius:99px;padding:0 6px;margin-left:6px;vertical-align:1px}
+.dose{font-size:13px;color:var(--fg2)}
+.dose b{color:var(--fg);font-weight:600}
+.item-note{font-size:12px;color:var(--fg3)}
+.ck{appearance:none;-webkit-appearance:none;width:24px;height:24px;flex-shrink:0;border:1.5px solid #364156;border-radius:7px;background:var(--sunk);margin-top:1px;cursor:pointer;display:grid;place-items:center;transition:background .15s,border-color .15s}
+.ck:checked{background:var(--done);border-color:var(--done)}
+.ck:checked::after{content:"";width:6px;height:11px;border:solid #06120a;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.item.done .item-name,.item.done .item-name a{color:var(--fg3)}
+.item.done .dose,.item.done .item-note{opacity:.55}
+
+/* Run table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:9px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--fg3);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td.p{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--fg)}
+td.h{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--fg2)}
+
+/* Toggle */
+.toggle{display:flex;gap:4px;background:var(--sunk);border:1px solid var(--line);border-radius:99px;padding:3px}
+.toggle button{flex:1;padding:8px 0;border:0;border-radius:99px;background:none;font-size:13px;font-weight:600;color:var(--fg3);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.toggle button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+
+/* Reference */
+details.ref{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.ref summary{list-style:none;cursor:pointer;padding:13px 14px;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+details.ref summary::-webkit-details-marker{display:none}
+details.ref summary::after{content:"＋";color:var(--fg3);font-weight:400}
+details.ref[open] summary::after{content:"－"}
+.ref-body{padding:0 14px 14px;display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--fg2)}
+.ref-body h3{font-size:13px;color:var(--fg);margin-bottom:2px}
+.ref-body ul{padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.ref-body li b{color:var(--fg)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr">
+    <div class="hdr-main">
+      <div class="hdr-top">
+        <span class="hdr-week" id="hdrWeek">Week</span>
+        <span class="hdr-dates tab" id="hdrDates"></span>
+      </div>
+      <div class="hdr-sub" id="hdrSub"></div>
+    </div>
+    <div class="nav">
+      <button id="prevBtn" aria-label="Previous week">‹</button>
+      <button id="todayBtn" class="today-btn">Today</button>
+      <button id="nextBtn" aria-label="Next week">›</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="strip" aria-label="Weekly mileage">
+    <div class="strip-head">
+      <span class="label">Miles by week</span>
+      <span class="legend">
+        <span><i style="background:var(--walk)"></i>Recover</span>
+        <span><i style="background:var(--easy)"></i>Base</span>
+        <span><i style="background:var(--lift)"></i>Strength</span>
+      </span>
+    </div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <div class="note" id="weekNote"></div>
+
+  <div class="days" id="days"></div>
+
+  <details class="ref">
+    <summary>Paces and heart rate</summary>
+    <div class="ref-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Effort</th><th>Pace</th><th>Treadmill</th><th>HR</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot" style="--c:var(--walk)"></span>Recovery</td><td class="p">11:00–12:00</td><td class="h">5.0–5.5 mph</td><td class="h">under 130</td></tr>
+            <tr><td><span class="dot" style="--c:var(--easy)"></span>Easy and long</td><td class="p">10:15–11:15</td><td class="h">5.3–5.9 mph</td><td class="h">124–140</td></tr>
+            <tr><td><span class="dot" style="--c:var(--long)"></span>Steady (marathon effort)</td><td class="p">9:40–9:55</td><td class="h">6.0–6.2 mph</td><td class="h">140–150</td></tr>
+            <tr><td><span class="dot" style="--c:var(--work)"></span>Tempo</td><td class="p">8:50–9:10</td><td class="h">6.5–6.8 mph</td><td class="h">154–164</td></tr>
+            <tr><td><span class="dot" style="--c:var(--caution)"></span>Intervals (5K–10K effort)</td><td class="p">8:10–8:30</td><td class="h">7.1–7.3 mph</td><td class="h">164+ by the end</td></tr>
+            <tr><td><span class="dot" style="--c:var(--fg2)"></span>Strides</td><td class="p">7:30–8:00</td><td class="h">7.5–8.0 mph</td><td class="h">by feel</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Heart rates use a max of about 177. On easy days, heart rate wins over pace: if you're over 140, slow down, even if that means 11:30 miles. Use 1% incline on the treadmill. Paces get reset after the 5K time trial in February.</p>
+    </div>
+  </details>
+
+  <details class="ref">
+    <summary>How this plan works</summary>
+    <div class="ref-body">
+      <div>
+        <h3>The week</h3>
+        <ul>
+          <li><b>Sun</b> long run · <b>Mon</b> Gym A (optional easy run from week 3) · <b>Tue</b> easy run · <b>Wed</b> off · <b>Thu</b> workout · <b>Fri</b> Gym B · <b>Sat</b> easy run</li>
+          <li>Saturday is a run day, not a gym day, so your legs and hips start every long run fresh.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>4 or 5 days?</h3>
+        <p>Five days still means one workout. The 5th run is an easy 3–4 miles on Monday. Your engine is already ahead of your legs (your heart rate stayed low all race), so a second hard day adds injury risk without fixing what limited you. When the spring half block starts, the long run picks up steady miles and becomes your second quality day.</p>
+      </div>
+      <div>
+        <h3>Strength</h3>
+        <ul>
+          <li><b>Weeks 1–2:</b> re-entry. 2 sets, light, no soreness the next day.</li>
+          <li><b>Weeks 3–9:</b> build. 3 sets; the last 2 reps of each set are hard but clean.</li>
+          <li><b>Weeks 10–16:</b> strength. Heavier main lifts at lower reps, plus pogo hops and lateral bounds.</li>
+          <li>Add weight once you hit the top of the rep range on every set.</li>
+          <li>Cutback weeks (5, 9, 13, 16): 2 sets of everything, same weights.</li>
+          <li>Upper body is gym only. Pair the moves to stay inside 45–60 minutes.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Your scoreboard</h3>
+        <p>On each long run, note the mile where your hips first speak up. Before Columbus it was miles 7–11. That number moving later is how you'll know the strength work is paying off.</p>
+      </div>
+      <div>
+        <h3>Pain rules</h3>
+        <ul>
+          <li><b>Dull and steady:</b> keep going.</li>
+          <li><b>Building mile over mile:</b> slow to recovery pace or cut the run short.</li>
+          <li><b>Sharp, makes you limp, or the outside of your knee hurts on stairs:</b> stop running and see a PT.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+</main>
+
+<script>
+(function(){
+"use strict";
+
+/* ───────── Storage (best effort) ───────── */
+const NS = "run26:";
+function sget(k){ try { return localStorage.getItem(NS+k); } catch(e){ return null; } }
+function sset(k,v){ try { if (v===null) localStorage.removeItem(NS+k); else localStorage.setItem(NS+k,v); } catch(e){} }
+
+/* ───────── Dates ───────── */
+const START = new Date(2026, 9, 19); // Mon Oct 19, 2026 = week 0, day 0
+const DOW = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+function dayDate(w, i){ const d = new Date(START); d.setDate(d.getDate() + w*7 + i); return d; }
+function iso(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function short(d){ return d.toLocaleDateString("en-US",{month:"short",day:"numeric"}); }
+function todayIso(){ return iso(new Date()); }
+
+/* ───────── Paces ───────── */
+const P = {
+  rec:   ["11:00–12:00/mi","under 130"],
+  easy:  ["10:15–11:15/mi","124–140"],
+  steady:["9:40–9:55/mi","140–150"],
+  thr:   ["8:50–9:10/mi","154–164"],
+  int:   ["8:10–8:30/mi","164+ by the end"],
+  stride:["7:30–8:00/mi, relaxed","by feel"],
+  hill:  ["hard, controlled","155–165"],
+  jog:   ["walk or slow jog","back under 130"]
+};
+
+/* ───────── Run builders ───────── */
+function easyRun(mi, tip){
+  return {type:"easy", miles:mi, label:"Easy Run", sum:mi+" mi easy",
+    steps:[["All "+mi+" mi"].concat(P.easy)], tip:tip||null,
+    tm:"Treadmill: 5.3–5.9 mph at 1% incline."};
+}
+function strides(mi, n){
+  return {type:"work", miles:mi, label:"Easy + Strides", sum:mi+" mi easy · "+n+"×20 sec strides",
+    steps:[["Easy running"].concat(P.easy),[n+"×20 sec strides, last mile"].concat(P.stride),["Walk 60 sec after each"].concat(P.jog)],
+    tip:"Strides are quick and smooth, about 90% effort. Not sprints.",
+    tm:"Treadmill: easy at 5.3–5.9 mph; strides at 7.5–8.0 mph for 30 sec each."};
+}
+function hillStrides(mi, n){
+  return {type:"work", miles:mi, label:"Easy + Hill Strides", sum:mi+" mi easy · "+n+"×15 sec uphill",
+    steps:[["Easy running"].concat(P.easy),[n+"×15 sec uphill strides"].concat(P.hill),["Walk back down"].concat(P.jog)],
+    tip:"Drive the knees, stay tall, push off with your glutes. Short and punchy, so they build power without the pounding.",
+    tm:"Treadmill: 6% incline at 7.0 mph for 20 sec, then 60 sec at 1% walking."};
+}
+function fartlek(mi, n, on, off, pace){
+  const p = pace || P.thr;
+  return {type:"work", miles:mi, label:"Fartlek", sum:mi+" mi · "+n+"×"+on+" pickups",
+    steps:[["Warm-up 1 mi"].concat(P.easy),[n+"×"+on+" pickups"].concat(p),[off+" easy between"].concat(P.easy),["Cool-down to finish"].concat(P.easy)],
+    tip:"Pickups should feel comfortably hard. Ease off between them, don't stop.",
+    tm:"Treadmill: pickups at "+(p===P.int?"7.1–7.3":"6.5–6.8")+" mph, easy at 5.5 mph, 1% incline."};
+}
+function hills(mi, n){
+  return {type:"work", miles:mi, label:"Hill Repeats", sum:mi+" mi · "+n+"×45 sec uphill",
+    steps:[["Warm-up 1–1.5 mi"].concat(P.easy),[n+"×45 sec uphill"].concat(P.hill),["Jog or walk back down"].concat(P.jog),["Cool-down to finish"].concat(P.easy)],
+    tip:"Pick a moderate hill (4–6%). Run tall with short, quick steps and push off with your glutes. Hills build the same hip strength the gym work does. Stop the set if your hip or IT band starts to complain.",
+    tm:"Treadmill: 6% incline at 6.5–7.0 mph for 45 sec, then 2 min at 1% walking."};
+}
+function tempo(mi, reps, min, rest){
+  return {type:"work", miles:mi, label:"Tempo", sum:mi+" mi · "+reps+"×"+min+" min tempo",
+    steps:[["Warm-up 1–1.5 mi"].concat(P.easy),[reps+"×"+min+" min tempo"].concat(P.thr),[rest+" min easy jog between"].concat(P.jog),["Cool-down to finish"].concat(P.easy)],
+    tip:"Comfortably hard: you could say a short sentence but not hold a conversation. Same pace on every rep.",
+    tm:"Treadmill: tempo at 6.5–6.8 mph, 1% incline."};
+}
+function intervals(mi, reps, min, rest){
+  return {type:"work", miles:mi, label:"Intervals", sum:mi+" mi · "+reps+"×"+min+" min hard",
+    steps:[["Warm-up 1.5 mi + 4 strides"].concat(P.easy),[reps+"×"+min+" min"].concat(P.int),[rest+" min easy jog between"].concat(P.jog),["Cool-down to finish"].concat(P.easy)],
+    tip:"Hard but even. The last rep should match the first. If your form falls apart, end the set there.",
+    tm:"Treadmill: 7.1–7.3 mph for the reps, 5.3 mph between, 1% incline."};
+}
+function timeTrial(){
+  return {type:"work", miles:5.6, label:"5K Time Trial", sum:"5K all-out, evenly paced",
+    steps:[["Warm-up 1.5 mi + 4 strides"].concat(P.easy),["5K, even effort",
+      "start near 8:30/mi","push the last mile"],["Cool-down 1 mi"].concat(P.easy)],
+    tip:"This sets your paces for the spring half. Start controlled and only push in the last mile. Send me the time when you're done.",
+    tm:"Treadmill works: 1% incline, start at 7.0 mph and raise it for the last mile if you can."};
+}
+function longRun(mi, steady){
+  steady = steady || 0;
+  const steps = steady
+    ? [["First "+(mi-steady)+" mi"].concat(P.easy),["Last "+steady+" mi steady"].concat(P.steady)]
+    : [["All "+mi+" mi"].concat(P.easy)];
+  let fuel = null;
+  if (mi >= 9) fuel = "Fuel like race day: a gel at 35–40 min, then every 30–35 min, with water.";
+  else if (mi >= 7) fuel = "Bring water. A gel around 45 min is optional.";
+  return {type:"long", miles:mi, label: steady ? "Long Run, Steady Finish" : "Long Run",
+    sum: mi+" mi"+(steady ? " · last "+steady+" steady" : " easy"), steps:steps,
+    tip: steady
+      ? "The steady miles teach your hips to hold form when tired. If your hip or IT band starts building, drop back to easy pace."
+      : "Note the mile where your hips first speak up. Before Columbus it was 7–11.",
+    fuel:fuel, tm:null};
+}
+
+/* ───────── The 17 weeks ───────── */
+const WEEKS = [
+  {ph:"rec", lift:null, custom:true,
+   note:"<b>Recovery week.</b> Walk, sleep, and eat well. No running until Sunday, and only if walking and stairs feel normal."},
+  {ph:"rec", lift:"re", tue:3, thu:easyRun(3,"No workout yet. Just easy miles."), sat:3, sun:longRun(4),
+   note:"<b>Easy running only.</b> Keep every run truly conversational, heart rate under 140. Strength comes back light: 2 sets, nothing heavy."},
+  {ph:"rec", lift:"re", tue:4, thu:strides(4,4), sat:3, sun:longRun(5),
+   note:"<b>Still easy.</b> Thursday adds a few strides to wake your legs up."},
+  {ph:"base", lift:"build", mon5:3, tue:4, thu:hillStrides(4.5,6), sat:4, sun:longRun(6),
+   note:"<b>Base phase starts.</b> Strength goes to 3 sets and starts building. The optional Monday run opens up."},
+  {ph:"base", lift:"build", mon5:3, tue:5, thu:fartlek(5,6,"1 min","2 min"), sat:4, sun:longRun(7),
+   note:"<b>First fartlek.</b> Long run goes to 7."},
+  {ph:"base", lift:"build", cut:true, tue:4, thu:strides(4,6), sat:3, sun:longRun(5),
+   note:"<b>Thanksgiving cutback.</b> Less running, and 2 sets on strength at the same weights."},
+  {ph:"base", lift:"build", mon5:3, tue:5, thu:hills(5,6), sat:4, sun:longRun(7),
+   note:"<b>First hill repeats.</b> Hills build hip and glute strength while you run."},
+  {ph:"base", lift:"build", mon5:3, tue:5, thu:tempo(5.5,2,10,3), sat:4, sun:longRun(8),
+   note:"<b>First tempo.</b> Long run reaches 8."},
+  {ph:"base", lift:"build", mon5:3, tue:5, thu:hills(5.5,8), sat:5, sun:longRun(9),
+   note:"<b>Biggest base week.</b> First long run with gels since the race."},
+  {ph:"str", lift:"build", cut:true, tue:4, thu:strides(4,6), sat:4, sun:longRun(6),
+   note:"<b>Christmas cutback.</b> 2 sets on strength. Heavier lifting starts next week."},
+  {ph:"str", lift:"str", mon5:4, tue:5, thu:tempo(6,3,8,2), sat:4, sun:longRun(9),
+   note:"<b>Strength phase.</b> Heavier main lifts at lower reps, plus pogo hops and lateral bounds. Gym B falls on New Year's Day."},
+  {ph:"str", lift:"str", mon5:4, tue:5, thu:fartlek(6,8,"2 min","90 sec"), sat:5, sun:longRun(10),
+   note:"<b>Long run reaches 10.</b>"},
+  {ph:"str", lift:"str", mon5:4, tue:6, thu:hills(6,10), sat:5, sun:longRun(10,2),
+   note:"<b>First steady finish.</b> The last 2 miles of the long run at marathon effort."},
+  {ph:"str", lift:"str", cut:true, tue:5, thu:fartlek(5,6,"1 min","1 min",P.int), sat:4, sun:longRun(7),
+   note:"<b>Cutback week.</b> 2 sets on strength at the same weights."},
+  {ph:"str", lift:"str", mon5:4, tue:6, thu:tempo(6.5,3,10,2), sat:5, sun:longRun(11),
+   note:"<b>Long run goes to 11.</b> Longest tempo yet."},
+  {ph:"str", lift:"str", mon5:4, tue:6, thu:intervals(6,5,3,2), sat:5, sun:longRun(11,3),
+   note:"<b>Peak week.</b> Long run finishes with 3 steady miles."},
+  {ph:"str", lift:"str", cut:true, tue:5, thu:timeTrial(), sat:3, sun:longRun(8),
+   note:"<b>Test week.</b> Thursday's 5K time trial sets your paces for the spring half."}
+];
+const LAST = WEEKS.length - 1;
+
+const HOLIDAY = {
+  "2026-11-26":"Thanksgiving. A local Turkey Trot works here too: run it at steady effort, not as a race.",
+  "2026-12-24":"Christmas Eve. Keep it short and easy.",
+  "2026-12-25":"Christmas. Do the home version, or skip it.",
+  "2026-12-31":"New Year's Eve.",
+  "2027-01-01":"New Year's Day. If the gym is closed, do the home version."
+};
+
+const PHASE = {
+  rec:{name:"Recover", c:"var(--walk)"},
+  base:{name:"Base", c:"var(--easy)"},
+  str:{name:"Strength", c:"var(--lift)"}
+};
+const TYPE = {
+  easy:{c:"var(--easy)"}, work:{c:"var(--work)"}, long:{c:"var(--long)"},
+  gym:{c:"var(--lift)"}, off:{c:"var(--off)"}, walk:{c:"var(--walk)"}
+};
+
+/* ───────── Exercise library ───────── */
+const S = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+const V = {
+  swing:"https://www.youtube.com/watch?v=U3HlEF_E9fo",
+  bandWalk:"https://www.youtube.com/watch?v=6eoK_yxY8Ak",
+  bridge:"https://www.youtube.com/watch?v=egs6m4J8u8c",
+  clam:"https://www.youtube.com/watch?v=QjKyGqrAaP4",
+  hike:"https://www.youtube.com/watch?v=3OwttGWEOB8",
+  copen:"https://www.youtube.com/watch?v=yByUFuQsgCg",
+  dbRdl:"https://www.youtube.com/watch?v=7j-2w4-P14I",
+  stepDown:"https://www.youtube.com/watch?v=gDE83dy8mNA",
+  slRdl:"https://www.youtube.com/watch?v=Zfr6wizR8rs",
+  sidePlankLeg:"https://www.youtube.com/watch?v=edTXNT-etYc",
+  calf:"https://www.youtube.com/watch?v=k8ipHzKeAkQ"
+};
+const D = (re, build, str) => ({re:re, build:build, str:str});
+const same = v => D(v, v, v);
+
+const ACTIVATION = [
+  {id:"act-walk", n:"Band lateral walk", u:V.bandWalk, d:"10 steps each way"},
+  {id:"act-clam", n:"Clamshells", u:V.clam, d:"15 per side"},
+  {id:"act-hike", n:"Hip hikes", u:V.hike, d:"10 per side, slow"},
+  {id:"act-bridge", n:"Glute bridges", u:V.bridge, d:"12"}
+];
+const MOBILITY = [
+  {id:"mob-couch", n:"Couch stretch", u:S("couch stretch hip flexor"), d:"60–90 sec per side, squeeze the back glute"},
+  {id:"mob-9090", n:"90/90 hip switches", u:S("90 90 hip switch mobility"), d:"2 min"},
+  {id:"mob-fig4", n:"Figure-4 stretch", u:S("figure 4 glute stretch"), d:"60 sec per side"},
+  {id:"mob-gun", n:"Massage gun, light", d:"30–60 sec each on glutes and outer hip (TFL)"}
+];
+
+const COOL_A = [
+  {id:"cool-couch", n:"Couch stretch", u:S("couch stretch hip flexor"), d:same("60 sec per side")},
+  {id:"cool-fig4", n:"Figure-4 stretch", u:S("figure 4 glute stretch"), d:same("60 sec per side")}
+];
+const COOL_B = [
+  {id:"cool-quad", n:"Quad and hamstring stretch", d:same("30 sec each")},
+  {id:"cool-roll", n:"Foam roll glutes, quads, and outer hip", d:same("2–3 min"), t:"Roll the TFL at the front of the hip, not the IT band itself."}
+];
+
+const GYM = {
+  A:{
+    title:"Gym A", focus:"Hip Strength + Chest",
+    gym:{
+      warm:[
+        {id:"a-bike", n:"Bike or incline walk", d:same("5 min easy")},
+        {id:"a-swing", n:"Leg swings, front/back and side to side", u:V.swing, d:same("10 each direction")},
+        {id:"a-band", n:"Band lateral walk", u:V.bandWalk, d:D("10 steps each way","2×10 each way","2×10 each way")}
+      ],
+      legs:[
+        {id:"a-rdl", n:"Barbell Romanian deadlift", u:S("barbell romanian deadlift form"), d:D("2×8, light","3×8","4×6, heavier"), t:"Hinge at the hips, flat back, bar close to your legs."},
+        {id:"a-bss", n:"Bulgarian split squat", u:S("dumbbell bulgarian split squat form"), d:D("2×8 per side, bodyweight","3×8 per side, light dumbbells","3×6–8 per side, moderate dumbbells"), t:"Front knee tracks over your second toe. Keep the pelvis level."},
+        {id:"a-thrust", n:"Hip thrust, barbell or Smith", u:S("barbell hip thrust form"), d:D("2×10, light","3×10","4×6–8, heavier"), t:"Pad the bar. Pause 1 sec at the top."},
+        {id:"a-abd", n:"Hip abduction machine", u:S("hip abduction machine form lean forward glute medius"), d:D("2×15, light","3×12–15","4×10–12, heavier"), t:"Lean slightly forward and hold 2 sec at the widest point. This is the glute med, the muscle that gave out at Columbus."},
+        {id:"a-add", n:"Hip adduction machine", u:S("hip adduction machine form"), d:D("2×12, light","3×12","3×10–12"), t:"Control the return."}
+      ],
+      upperNote:"Pair them to save time: bench with pulldown, then fly with pushdown. Rest 60–90 sec after each pair.",
+      upper:[
+        {id:"a-dbbench", n:"Dumbbell bench press", u:S("dumbbell bench press form"), d:D("3×10, moderate","3×8–10","4×6–8")},
+        {id:"a-pulldown", n:"Lat pulldown machine", u:S("lat pulldown machine form"), d:D("2×12","3×10–12","3×8–10")},
+        {id:"a-fly", n:"Pec fly machine", u:S("pec deck fly machine form"), d:D("2×12","3×12–15","3×10–12")},
+        {id:"a-push", n:"Triceps rope pushdown", u:S("cable tricep rope pushdown form"), d:D("2×12","3×12–15","3×10–12")}
+      ],
+      core:[
+        {id:"a-captain", n:"Captain's Chair knee raise", u:S("captains chair knee raise form"), d:D("2×10","3×10–15","3×12–15"), t:"Curl your pelvis toward your ribs at the top. Skip it if the front of your hip complains."}
+      ],
+      cool:COOL_A
+    },
+    home:{
+      warm:[
+        {id:"ah-march", n:"March or jog in place", d:same("2 min")},
+        {id:"ah-swing", n:"Leg swings, front/back and side to side", u:V.swing, d:same("10 each direction")},
+        {id:"ah-band", n:"Band lateral walk", u:V.bandWalk, d:D("10 steps each way","2×10 each way","2×10 each way")}
+      ],
+      legs:[
+        {id:"ah-rdl", n:"Dumbbell Romanian deadlift", u:V.dbRdl, d:D("2×10, light","3×10","4×8, slow 3-sec lower")},
+        {id:"ah-bss", n:"Bulgarian split squat, back foot on the couch", u:S("bulgarian split squat at home"), d:D("2×8 per side, bodyweight","3×8 per side, dumbbells if you have them","3×10 per side, dumbbells"), t:"Front knee tracks over your second toe. Keep the pelvis level."},
+        {id:"ah-slbridge", n:"Single-leg glute bridge", u:V.bridge, d:D("2×10 per side","3×12 per side","3×15 per side, dumbbell on the hip")},
+        {id:"ah-sideabd", n:"Side-lying hip abduction, band above knees", u:S("side lying hip abduction band"), d:D("2×12 per side","3×15 per side","3×20 per side, heavier band"), t:"Tilt the toes slightly down so the heel leads. You should feel it in the side of your butt, not the front of the hip."},
+        {id:"ah-copen", n:"Copenhagen side plank, on the couch", u:V.copen, d:D("2×10 sec per side","3×15–20 sec per side","3×25–30 sec per side")}
+      ],
+      core:[
+        {id:"ah-deadbug", n:"Dead bug", u:S("dead bug exercise form"), d:D("2×8 per side","3×8 per side","3×10 per side")}
+      ],
+      cool:COOL_A
+    }
+  },
+  B:{
+    title:"Gym B", focus:"Single-Leg Control + Arms",
+    gym:{
+      warm:[
+        {id:"b-bike", n:"Bike or incline walk", d:same("5 min easy")},
+        {id:"b-swing", n:"Leg swings, front/back and side to side", u:V.swing, d:same("10 each direction")},
+        {id:"b-band", n:"Band lateral walk", u:V.bandWalk, d:D("10 steps each way","2×10 each way","2×10 each way")},
+        {id:"b-pogo", n:"Pogo hops", u:S("pogo hops for runners"), d:D(null,null,"2×20, quick and low"), t:"Stiff ankles, quiet landings. Builds the spring your stride lost late in the race."}
+      ],
+      legs:[
+        {id:"b-stepup", n:"Dumbbell step-up, knee-height box", u:S("dumbbell step up form"), d:D("2×8 per side, bodyweight","3×8 per side, light dumbbells","3×8 per side, heavier, 3-sec lower"), t:"Drive through the front heel. Don't let the opposite hip drop."},
+        {id:"b-slrdl", n:"Single-leg Romanian deadlift", u:V.slRdl, d:D("2×8 per side, light","3×8 per side","3×8 per side, heavier")},
+        {id:"b-cableabd", n:"Standing cable hip abduction, ankle strap", u:S("standing cable hip abduction form"), d:D("2×12 per side, light","3×12 per side","3×15 per side"), t:"Stand tall with no leaning. Move only from the hip."},
+        {id:"b-stepdown", n:"Forward step-down, 6–8 inch step", u:V.stepDown, d:D("2×8 per side","3×10 per side","3×12 per side, slower"), t:"3 sec down. Knee over toes, pelvis level."},
+        {id:"b-calf", n:"Single-leg calf raise off a step", u:V.calf, d:D("2×12 per side","3×12 per side","3×15 per side, hold a dumbbell")},
+        {id:"b-bound", n:"Lateral bounds", u:S("lateral bounds exercise runners"), d:D(null,null,"3×5 per side, stick each landing"), t:"Land soft and hold 2 sec. Hip, knee, and foot stay lined up."}
+      ],
+      upperNote:"Arms day. Pair chest press with curls, then hammer curls with overhead extensions. Rest 60–90 sec after each pair.",
+      upper:[
+        {id:"b-chest", n:"Chest press machine", u:S("chest press machine form"), d:D("2×10","3×10–12","3×8–10")},
+        {id:"b-curl", n:"Dumbbell curl", u:S("dumbbell bicep curl form"), d:D("2×12","3×10–12","4×8–10")},
+        {id:"b-hammer", n:"Hammer curl", isNew:true, u:S("dumbbell hammer curl form"), d:D("2×12","2×12","3×10"), t:"Builds the outer arm and forearm that regular curls miss."},
+        {id:"b-overhead", n:"Overhead rope triceps extension", isNew:true, u:S("overhead cable rope tricep extension form"), d:D("2×12","3×12","3×10–12"), t:"Works the long head of the triceps, the biggest part, which pushdowns barely reach."}
+      ],
+      core:[
+        {id:"b-sideplank", n:"Side plank with top-leg raise", u:V.sidePlankLeg, d:D("2×8 per side","3×10 per side","3×12 per side"), t:"More glute med work, with the core holding you up."}
+      ],
+      cool:COOL_B
+    },
+    home:{
+      warm:[
+        {id:"bh-march", n:"March or jog in place", d:same("2 min")},
+        {id:"bh-swing", n:"Leg swings, front/back and side to side", u:V.swing, d:same("10 each direction")},
+        {id:"bh-band", n:"Band lateral walk", u:V.bandWalk, d:D("10 steps each way","2×10 each way","2×10 each way")},
+        {id:"bh-pogo", n:"Pogo hops", u:S("pogo hops for runners"), d:D(null,null,"2×20, quick and low"), t:"Stiff ankles, quiet landings."}
+      ],
+      legs:[
+        {id:"bh-stepup", n:"Step-up onto a stair or sturdy chair", u:S("step up exercise at home"), d:D("2×8 per side","3×10 per side","3×10 per side, hold dumbbells"), t:"Drive through the front heel. Don't let the opposite hip drop."},
+        {id:"bh-slrdl", n:"Single-leg Romanian deadlift", u:V.slRdl, d:D("2×8 per side","3×8 per side","3×10 per side, hold a dumbbell")},
+        {id:"bh-standabd", n:"Standing band hip abduction, band at ankles", u:S("standing banded hip abduction"), d:D("2×12 per side","3×15 per side","3×20 per side"), t:"Stand tall with no leaning. Move only from the hip."},
+        {id:"bh-stepdown", n:"Forward step-down from the bottom stair", u:V.stepDown, d:D("2×8 per side","3×10 per side","3×12 per side, slower"), t:"3 sec down. Knee over toes, pelvis level."},
+        {id:"bh-calf", n:"Single-leg calf raise on a stair", u:V.calf, d:D("2×12 per side","3×15 per side","3×20 per side")},
+        {id:"bh-bound", n:"Lateral bounds", u:S("lateral bounds exercise runners"), d:D(null,null,"3×5 per side, stick each landing"), t:"Land soft and hold 2 sec."}
+      ],
+      core:[
+        {id:"bh-sideplank", n:"Side plank with top-leg raise", u:V.sidePlankLeg, d:D("2×8 per side","3×10 per side","3×12 per side")}
+      ],
+      cool:COOL_B
+    }
+  }
+};
+
+const LIFT_NOTE = {
+  re:"<b>Re-entry:</b> 2 sets, light weights, nothing that leaves you sore tomorrow.",
+  build:"<b>Build:</b> 3 sets. The last 2 reps of each set should be hard but clean.",
+  str:"<b>Strength:</b> heavier main lifts at lower reps. Rest 2 min between heavy sets."
+};
+
+/* ───────── Week 0 (race recovery) ───────── */
+function week0Day(i){
+  const walk = n => ({id:"walk", n:"Easy walk", d:n});
+  const plans = [
+    {type:"walk", label:"Recovery", sum:"Easy walk, legs up", items:[walk("20–30 min"), {id:"legsup", n:"Legs up the wall", d:"10 min"}]},
+    {type:"walk", label:"Recovery", sum:"Walk + gentle mobility", items:[walk("20–30 min")].concat(MOBILITY.slice(0,3))},
+    {type:"off"},
+    {type:"walk", label:"Recovery", sum:"Walk + mobility", items:[walk("20–30 min")].concat(MOBILITY)},
+    {type:"walk", label:"Recovery", sum:"Walk + mobility", items:[walk("30 min")].concat(MOBILITY)},
+    {type:"walk", label:"Activation + Walk", sum:"Band circuit, then a walk", items:ACTIVATION.concat([walk("30 min")])},
+    Object.assign(easyRun(3), {label:"Test Run (optional)", sum:"2–3 mi easy, only if pain-free", optional:true,
+      steps:[["2–3 mi"].concat(P.rec)],
+      tip:"Only if walking and stairs feel normal. If the outside of your knee or hip hurts, stop and walk home. That's useful information, not a failure."})
+  ];
+  return plans[i];
+}
+
+/* ───────── Build a week's day list ───────── */
+function weekDays(w){
+  const W = WEEKS[w];
+  const out = [];
+  for (let i=0;i<7;i++){
+    const d = dayDate(w,i);
+    let day;
+    if (W.custom) day = week0Day(i);
+    else if (i===0) day = {type:"gym", gym:"A", mon5:W.mon5||0};
+    else if (i===1) day = easyRun(W.tue, w===1 ? "Truly conversational. Heart rate under 140, even if that means 11:30 miles." : null);
+    else if (i===2) day = {type:"off"};
+    else if (i===3) day = W.thu;
+    else if (i===4) day = {type:"gym", gym:"B"};
+    else if (i===5) day = easyRun(W.sat);
+    else day = W.sun;
+    out.push(Object.assign({}, day, {date:d, key:iso(d), dow:DOW[i]}));
+  }
+  return out;
+}
+function weekMiles(w){
+  const W = WEEKS[w];
+  if (W.custom) return {planned:0, opt:3};
+  const thu = W.thu.miles, sun = W.sun.miles;
+  return {planned: Math.round((W.tue+thu+W.sat+sun)*10)/10, opt: W.mon5||0};
+}
+function weekOfDate(isoStr){
+  for (let w=0; w<=LAST; w++){
+    if (iso(dayDate(w,0)) <= isoStr && isoStr <= iso(dayDate(w,6))) return w;
+  }
+  return isoStr < iso(START) ? 0 : LAST;
+}
+
+/* ───────── Rendering helpers ───────── */
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function itemHTML(dateKey, ex, dose){
+  const key = dateKey + ":" + ex.id;
+  const name = ex.u ? '<a href="'+esc(ex.u)+'" target="_blank" rel="noopener">'+esc(ex.n)+'</a>' : esc(ex.n);
+  return '<label class="item"><span class="item-text">'
+    + '<span class="item-name">'+name+(ex.isNew?'<span class="new">New</span>':'')+'</span>'
+    + (dose ? '<span class="dose">'+esc(dose)+'</span>' : '')
+    + (ex.t ? '<span class="item-note">'+esc(ex.t)+'</span>' : '')
+    + '</span><input type="checkbox" class="ck" data-key="'+esc(key)+'" aria-label="Done: '+esc(ex.n)+'"></label>';
+}
+function groupHTML(title, items, dateKey, phase, aside, note){
+  const rows = items.map(ex => {
+    const dose = typeof ex.d === "string" ? ex.d : (ex.d ? ex.d[phase] : null);
+    if (ex.d && typeof ex.d !== "string" && dose === null) return "";
+    return itemHTML(dateKey, ex, dose);
+  }).join("");
+  if (!rows) return "";
+  return '<div><div class="group-title"><span>'+title+'</span>'+(aside?'<em>'+aside+'</em>':'')+'</div>'
+    + (note ? '<p class="group-note">'+esc(note)+'</p>' : '') + rows + '</div>';
+}
+function runTable(steps){
+  return '<div class="tbl-wrap"><table><thead><tr><th>Segment</th><th>Pace</th><th>HR</th></tr></thead><tbody>'
+    + steps.map(s => '<tr><td>'+esc(s[0])+'</td><td class="p">'+esc(s[1])+'</td><td class="h">'+esc(s[2])+'</td></tr>').join("")
+    + '</tbody></table></div>';
+}
+
+let mode = sget("mode") === "home" ? "home" : "gym";
+
+function bodyHTML(w, day){
+  const W = WEEKS[w];
+  const k = day.key;
+  let h = "";
+  if (HOLIDAY[k]) h += '<div class="callout">'+esc(HOLIDAY[k])+'</div>';
+
+  if (day.type === "off"){
+    return h + '<p class="tip">Rest day. A walk is fine if you feel like it.</p>';
+  }
+  if (day.type === "walk"){
+    return h + groupHTML("Today", day.items, k, null);
+  }
+  if (day.type === "gym"){
+    const G = GYM[day.gym];
+    const phase = W.lift;
+    const set = G[mode];
+    h += '<div class="toggle" role="group" aria-label="Workout location">'
+      + '<button type="button" data-mode="gym" aria-pressed="'+(mode==="gym")+'">Gym</button>'
+      + '<button type="button" data-mode="home" aria-pressed="'+(mode==="home")+'">Home</button></div>';
+    h += '<div class="callout lift">'+LIFT_NOTE[phase]+(W.cut?' <b>Cutback week:</b> 2 sets of everything, same weights.':'')+'</div>';
+    h += groupHTML("Warm-up", set.warm, k, phase);
+    h += groupHTML("Legs and hips", set.legs, k, phase, null, null);
+    if (mode === "gym") h += groupHTML("Upper body", set.upper, k, phase, "gym only", set.upperNote);
+    else h += '<div><div class="group-title"><span>Upper body</span><em>gym only</em></div><p class="group-note">Upper body is gym only. Skip it today.</p></div>';
+    h += groupHTML("Core", set.core, k, phase);
+    h += groupHTML("Cool-down", set.cool, k, phase);
+    if (day.mon5){
+      h += groupHTML("Optional 5th run", [
+        {id:"mon5", n:"Easy "+day.mon5+" mi", d:"10:15–11:15/mi · HR under 140 · do your band activation first", t:"Skip it if your legs are heavy from Sunday."}
+      ], k, null);
+    }
+    return h;
+  }
+  /* run days */
+  if (day.optional) h += '<div class="callout">Optional. Only run if walking and stairs feel normal.</div>';
+  h += groupHTML("Before you run", ACTIVATION, k, null, "3–4 min");
+  h += runTable(day.steps);
+  if (day.tip) h += '<p class="tip">'+esc(day.tip)+'</p>';
+  if (day.fuel) h += '<p class="tip"><b>Fuel:</b> '+esc(day.fuel)+'</p>';
+  if (day.tm) h += '<p class="tip"><b>Treadmill:</b> '+esc(day.tm.replace(/^Treadmill:\s*/,""))+'</p>';
+  h += groupHTML("Log", [{id:"run", n:"Run done", d: day.miles ? day.miles+" mi" : null}], k, null);
+  return h;
+}
+
+function headInfo(w, day){
+  if (day.type === "off") return {label:"Rest", sum:"Off", right:'<span class="d-miles" style="color:var(--fg3);font-size:13px">Off</span>'};
+  if (day.type === "walk") return {label:day.label, sum:day.sum, right:'<span class="d-miles" style="color:var(--fg3);font-size:13px">Walk</span>'};
+  if (day.type === "gym"){
+    const G = GYM[day.gym];
+    return {label:G.title, sum:G.focus + (day.mon5 ? " · +"+day.mon5+" mi optional" : ""), right:'<span class="d-miles" style="color:var(--lift);font-size:13px">Lift</span>'};
+  }
+  return {label:day.label, sum:day.sum, right:'<span class="d-miles tab">'+day.miles+'<small>mi</small></span>'};
+}
+
+/* ───────── Main render ───────── */
+let current = weekOfDate(todayIso());
+const open = new Set([todayIso()]);
+
+function renderHeader(){
+  const W = WEEKS[current];
+  const m = weekMiles(current);
+  document.getElementById("hdrWeek").textContent = current === 0 ? "Race Recovery" : "Week " + current;
+  document.getElementById("hdrDates").textContent = short(dayDate(current,0)) + " – " + short(dayDate(current,6));
+  const ph = PHASE[W.ph];
+  let sub = '<span class="chip" style="color:'+ph.c+'">'+ph.name+'</span>';
+  if (W.cut) sub += '<span class="chip" style="color:var(--fg3)">Cutback</span>';
+  sub += current === 0
+    ? '<span>Walking + optional test run</span>'
+    : '<span class="tab">'+m.planned+' mi planned'+(m.opt ? ' · +'+m.opt+' optional' : '')+'</span>';
+  document.getElementById("hdrSub").innerHTML = sub;
+  document.getElementById("prevBtn").disabled = current === 0;
+  document.getElementById("nextBtn").disabled = current === LAST;
+  document.getElementById("weekNote").innerHTML = W.note;
+}
+
+function renderBars(){
+  const totals = WEEKS.map((_, w) => w === 0 ? 3 : weekMiles(w).planned);
+  const max = Math.max.apply(null, totals);
+  const nowW = weekOfDate(todayIso());
+  document.getElementById("bars").innerHTML = WEEKS.map((W, w) => {
+    const hpx = Math.max(6, Math.round(totals[w] / max * 56));
+    const cls = "bar" + (W.cut ? " cut" : "") + (w === current ? " sel" : "") + (w === nowW ? " now" : "");
+    const lbl = w === 0 ? "Race recovery" : "Week "+w+", "+totals[w]+" miles";
+    return '<button type="button" class="'+cls+'" data-w="'+w+'" style="--c:'+PHASE[W.ph].c+'" aria-label="'+lbl+'">'
+      + '<span class="b" style="height:'+hpx+'px"></span><small>'+(w===0?"R":w)+'</small></button>';
+  }).join("");
+}
+
+function renderDays(){
+  const t = todayIso();
+  const days = weekDays(current);
+  document.getElementById("days").innerHTML = days.map(day => {
+    const info = headInfo(current, day);
+    const isOpen = open.has(day.key);
+    const isToday = day.key === t;
+    const c = TYPE[day.type].c;
+    return '<article class="day'+(isToday?" is-today":"")+'" data-key="'+day.key+'">'
+      + '<button type="button" class="day-head" aria-expanded="'+isOpen+'" aria-controls="b-'+day.key+'">'
+      + '<span class="stripe" style="--c:'+c+'"></span>'
+      + '<span class="d-date"><b>'+day.dow+'</b><small>'+short(day.date)+'</small></span>'
+      + '<span class="d-main"><span class="d-label">'+esc(info.label)+(isToday?'<span class="today-tag">Today</span>':'')+'</span>'
+      + '<span class="d-sum">'+esc(info.sum)+'</span></span>'
+      + '<span class="d-right">'+info.right+'<span class="d-prog tab"></span></span>'
+      + '</button>'
+      + '<div class="day-body" id="b-'+day.key+'"'+(isOpen?"":" hidden")+'>'+bodyHTML(current, day)+'</div>'
+      + '</article>';
+  }).join("");
+  bindChecks();
+}
+
+function updateProgress(card){
+  const boxes = card.querySelectorAll(".ck");
+  const prog = card.querySelector(".d-prog");
+  if (!boxes.length){ prog.textContent = ""; return; }
+  let n = 0; boxes.forEach(b => { if (b.checked) n++; });
+  prog.textContent = n + "/" + boxes.length;
+  prog.classList.toggle("all", n === boxes.length);
+}
+
+function bindChecks(){
+  document.querySelectorAll("#days .day").forEach(card => {
+    card.querySelectorAll(".ck").forEach(cb => {
+      cb.checked = sget("ck:" + cb.dataset.key) === "1";
+      cb.closest(".item").classList.toggle("done", cb.checked);
+    });
+    updateProgress(card);
+  });
+}
+
+function render(){ renderHeader(); renderBars(); renderDays(); }
+
+/* ───────── Events ───────── */
+document.getElementById("days").addEventListener("click", e => {
+  const head = e.target.closest(".day-head");
+  if (head){
+    const card = head.closest(".day");
+    const body = card.querySelector(".day-body");
+    const nowOpen = body.hidden;
+    body.hidden = !nowOpen;
+    head.setAttribute("aria-expanded", String(nowOpen));
+    if (nowOpen) open.add(card.dataset.key); else open.delete(card.dataset.key);
+    return;
+  }
+  const tbtn = e.target.closest(".toggle button");
+  if (tbtn){
+    mode = tbtn.dataset.mode;
+    sset("mode", mode);
+    renderDays();
+  }
+});
+document.getElementById("days").addEventListener("change", e => {
+  const cb = e.target.closest(".ck");
+  if (!cb) return;
+  sset("ck:" + cb.dataset.key, cb.checked ? "1" : null);
+  cb.closest(".item").classList.toggle("done", cb.checked);
+  updateProgress(cb.closest(".day"));
+});
+document.getElementById("bars").addEventListener("click", e => {
+  const b = e.target.closest(".bar");
+  if (!b) return;
+  current = Number(b.dataset.w);
+  render();
+});
+document.getElementById("prevBtn").addEventListener("click", () => { if (current > 0){ current--; render(); } });
+document.getElementById("nextBtn").addEventListener("click", () => { if (current < LAST){ current++; render(); } });
+document.getElementById("todayBtn").addEventListener("click", () => {
+  current = weekOfDate(todayIso());
+  open.add(todayIso());
+  render();
+  const el = document.querySelector('.day[data-key="'+todayIso()+'"]');
+  if (el) el.scrollIntoView({block:"center", behavior:"smooth"});
+});
+
+render();
+})();
+</script>
+</body>
+</html>
