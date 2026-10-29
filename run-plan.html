@@ -445,6 +445,11 @@ const COOL_B = [
   {id:"cool-roll", n:"Foam roll glutes, quads, and outer hip", d:same("2–3 min"), t:"Roll the TFL at the front of the hip, not the IT band itself."}
 ];
 
+const BACK_NOTE = "Weeks 1–9: slightly rounded upper back, squeeze your glutes, and stop when your body is straight, with no arch. From week 10, if your back has felt good for a few weeks, you can switch to full-range reps: let your back round fully at the bottom, then roll up slowly. Start with bodyweight. Back off if pain lasts into the next day.";
+const BACK_DOSE = D("2×10, bodyweight","3×12–15, bodyweight; hold a light plate once 3×15 is easy","3×12–15 with a plate, or full-range: 2×8 slow, bodyweight, building to 3×10");
+const BACK_GYM = [{id:"backext", n:"45° back extension (Roman chair)", u:S("45 degree back extension glute focus form"), d:BACK_DOSE, t:BACK_NOTE}];
+const BACK_HOME = [{id:"backext", n:"Back extension on your home machine", u:S("45 degree back extension glute focus form"), d:BACK_DOSE, t:BACK_NOTE}];
+
 const GYM = {
   A:{
     title:"Gym A", focus:"Hip Strength + Chest",
@@ -543,6 +548,8 @@ const GYM = {
     }
   }
 };
+
+["A","B"].forEach(g => { GYM[g].gym.back = BACK_GYM; GYM[g].home.back = BACK_HOME; });
 
 const LIFT_NOTE = {
   re:"<b>Re-entry:</b> 2 sets, light weights, nothing that leaves you sore tomorrow.",
@@ -652,6 +659,7 @@ function bodyHTML(w, day){
     h += groupHTML("Legs and hips", set.legs, k, phase, null, null);
     if (mode === "gym") h += groupHTML("Upper body", set.upper, k, phase, "gym only", set.upperNote);
     else h += '<div><div class="group-title"><span>Upper body</span><em>gym only</em></div><p class="group-note">Upper body is gym only. Skip it today.</p></div>';
+    h += groupHTML("Lower back", set.back, k, phase);
     h += groupHTML("Core", set.core, k, phase);
     h += groupHTML("Cool-down", set.cool, k, phase);
     if (day.mon5){
