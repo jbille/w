@@ -153,6 +153,12 @@ details.ref[open] summary::after{content:"－"}
 .ref-body li b{color:var(--fg)}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px}
 
+.bullets{list-style:none;display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.bullets li{position:relative;padding:7px 0 7px 24px;display:flex;flex-direction:column;border-bottom:1px solid var(--line-soft)}
+.bullets li:last-child{border-bottom:0}
+.bullets li::before{content:"";position:absolute;left:3px;top:13px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.bullets a{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -288,47 +294,73 @@ function easyRun(mi, tip){
     steps:[["All "+mi+" mi"].concat(P.easy)], tip:tip||null,
     tm:"Treadmill: 5.3–5.9 mph at 1% incline."};
 }
+/* Distance math: minutes per mile used to estimate how far each main set covers. */
+const MPM = {easy:10.75, thr:9.0, int:8.33, stride:7.75, hillUp:10.0, walk:20.0, jog:12.0};
+const r1 = x => Math.round(x*10)/10;
+function split(mi, warm, set){
+  const cool = r1(mi - warm - set);
+  return {warm:warm, set:r1(set), cool:cool,
+    line:"Warm-up "+warm+" mi + main set about "+r1(set)+" mi + cool-down "+cool+" mi = "+mi+" mi."};
+}
 function strides(mi, n){
+  const set = n*(20/60/MPM.stride + 1/MPM.walk);
+  const easy = r1(mi - set - 0.25);
   return {type:"work", miles:mi, label:"Easy + Strides", sum:mi+" mi easy · "+n+"×20 sec strides",
-    steps:[["Easy running"].concat(P.easy),[n+"×20 sec strides, last mile"].concat(P.stride),["Walk 60 sec after each"].concat(P.jog)],
+    steps:[["Easy "+easy+" mi"].concat(P.easy),[n+"×20 sec strides"].concat(P.stride),["Walk 60 sec after each"].concat(P.jog),["Easy 0.25 mi to finish"].concat(P.easy)],
+    dist:"Easy "+easy+" mi + strides about "+r1(set)+" mi + 0.25 mi to finish = "+mi+" mi.",
     tip:"Strides are quick and smooth, about 90% effort. Not sprints.",
     tm:"Treadmill: easy at 5.3–5.9 mph; strides at 7.5–8.0 mph for 30 sec each."};
 }
 function hillStrides(mi, n){
+  const set = n*(15/60/MPM.hillUp + 45/60/MPM.walk);
+  const out = Math.round((mi - set)/2*4)/4;
+  const back = r1(mi - set - out);
   return {type:"work", miles:mi, label:"Easy + Hill Strides", sum:mi+" mi easy · "+n+"×15 sec uphill",
-    steps:[["Easy running"].concat(P.easy),[n+"×15 sec uphill strides"].concat(P.hill),["Walk back down"].concat(P.jog)],
+    steps:[["Easy "+out+" mi to your hill"].concat(P.easy),[n+"×15 sec uphill strides"].concat(P.hill),["Walk back down after each"].concat(P.jog),["Easy "+back+" mi to finish"].concat(P.easy)],
+    dist:"Easy "+out+" mi + hill strides about "+r1(set)+" mi + easy "+back+" mi = "+mi+" mi.",
     tip:"Drive the knees, stay tall, push off with your glutes. Short and punchy, so they build power without the pounding.",
     tm:"Treadmill: 6% incline at 7.0 mph for 20 sec, then 60 sec at 1% walking."};
 }
 function fartlek(mi, n, on, off, pace){
   const p = pace || P.thr;
+  const onMin = parseFloat(on) * (/sec/.test(on) ? 1/60 : 1);
+  const offMin = parseFloat(off) * (/sec/.test(off) ? 1/60 : 1);
+  const sp = split(mi, 1, n*onMin/(p===P.int?MPM.int:MPM.thr) + (n-1)*offMin/MPM.easy);
   return {type:"work", miles:mi, label:"Fartlek", sum:mi+" mi · "+n+"×"+on+" pickups",
-    steps:[["Warm-up 1 mi"].concat(P.easy),[n+"×"+on+" pickups"].concat(p),[off+" easy between"].concat(P.easy),["Cool-down to finish"].concat(P.easy)],
+    steps:[["Warm-up "+sp.warm+" mi"].concat(P.easy),[n+"×"+on+" pickups"].concat(p),[off+" easy between"].concat(P.easy),["Cool-down "+sp.cool+" mi"].concat(P.easy)],
+    dist:sp.line,
     tip:"Pickups should feel comfortably hard. Ease off between them, don't stop.",
     tm:"Treadmill: pickups at "+(p===P.int?"7.1–7.3":"6.5–6.8")+" mph, easy at 5.5 mph, 1% incline."};
 }
 function hills(mi, n){
+  const sp = split(mi, 1.5, n*2*(45/60/MPM.hillUp));
   return {type:"work", miles:mi, label:"Hill Repeats", sum:mi+" mi · "+n+"×45 sec uphill",
-    steps:[["Warm-up 1–1.5 mi"].concat(P.easy),[n+"×45 sec uphill"].concat(P.hill),["Jog or walk back down"].concat(P.jog),["Cool-down to finish"].concat(P.easy)],
+    steps:[["Warm-up "+sp.warm+" mi"].concat(P.easy),[n+"×45 sec uphill"].concat(P.hill),["Jog or walk back down after each"].concat(P.jog),["Cool-down "+sp.cool+" mi"].concat(P.easy)],
+    dist:sp.line,
     tip:"Pick a moderate hill (4–6%). Run tall with short, quick steps and push off with your glutes. Hills build the same hip strength the gym work does. Stop the set if your hip or IT band starts to complain.",
     tm:"Treadmill: 6% incline at 6.5–7.0 mph for 45 sec, then 2 min at 1% walking."};
 }
 function tempo(mi, reps, min, rest){
+  const sp = split(mi, 1.5, reps*min/MPM.thr + (reps-1)*rest/MPM.jog);
   return {type:"work", miles:mi, label:"Tempo", sum:mi+" mi · "+reps+"×"+min+" min tempo",
-    steps:[["Warm-up 1–1.5 mi"].concat(P.easy),[reps+"×"+min+" min tempo"].concat(P.thr),[rest+" min easy jog between"].concat(P.jog),["Cool-down to finish"].concat(P.easy)],
+    steps:[["Warm-up "+sp.warm+" mi"].concat(P.easy),[reps+"×"+min+" min tempo"].concat(P.thr),[rest+" min easy jog between"].concat(P.jog),["Cool-down "+sp.cool+" mi"].concat(P.easy)],
+    dist:sp.line,
     tip:"Comfortably hard: you could say a short sentence but not hold a conversation. Same pace on every rep.",
     tm:"Treadmill: tempo at 6.5–6.8 mph, 1% incline."};
 }
 function intervals(mi, reps, min, rest){
+  const sp = split(mi, 1.5, reps*min/MPM.int + (reps-1)*rest/MPM.jog);
   return {type:"work", miles:mi, label:"Intervals", sum:mi+" mi · "+reps+"×"+min+" min hard",
-    steps:[["Warm-up 1.5 mi + 4 strides"].concat(P.easy),[reps+"×"+min+" min"].concat(P.int),[rest+" min easy jog between"].concat(P.jog),["Cool-down to finish"].concat(P.easy)],
+    steps:[["Warm-up "+sp.warm+" mi + 4 strides"].concat(P.easy),[reps+"×"+min+" min"].concat(P.int),[rest+" min easy jog between"].concat(P.jog),["Cool-down "+sp.cool+" mi"].concat(P.easy)],
+    dist:sp.line,
     tip:"Hard but even. The last rep should match the first. If your form falls apart, end the set there.",
     tm:"Treadmill: 7.1–7.3 mph for the reps, 5.3 mph between, 1% incline."};
 }
 function timeTrial(){
   return {type:"work", miles:5.6, label:"5K Time Trial", sum:"5K all-out, evenly paced",
-    steps:[["Warm-up 1.5 mi + 4 strides"].concat(P.easy),["5K, even effort",
+    steps:[["Warm-up 1.5 mi + 4 strides"].concat(P.easy),["5K (3.1 mi), even effort",
       "start near 8:30/mi","push the last mile"],["Cool-down 1 mi"].concat(P.easy)],
+    dist:"Warm-up 1.5 mi + 5K 3.1 mi + cool-down 1 mi = 5.6 mi.",
     tip:"This sets your paces for the spring half. Start controlled and only push in the last mile. Send me the time when you're done.",
     tm:"Treadmill works: 1% incline, start at 7.0 mph and raise it for the last mile if you can."};
 }
@@ -671,8 +703,11 @@ function bodyHTML(w, day){
   }
   /* run days */
   if (day.optional) h += '<div class="callout">Optional. Only run if walking and stairs feel normal.</div>';
-  h += groupHTML("Before you run", ACTIVATION, k, null, "3–4 min");
+  h += '<div><div class="group-title"><span>Before you run</span><em>3–4 min</em></div><ul class="bullets">'
+    + ACTIVATION.map(a => '<li><a href="'+esc(a.u)+'" target="_blank" rel="noopener">'+esc(a.n)+'</a><span class="dose">'+esc(a.d)+'</span></li>').join("")
+    + '</ul></div>';
   h += runTable(day.steps);
+  if (day.dist) h += '<p class="tip"><b>Distances:</b> '+esc(day.dist)+' Your watch will be a little off; that\'s fine.</p>';
   if (day.tip) h += '<p class="tip">'+esc(day.tip)+'</p>';
   if (day.fuel) h += '<p class="tip"><b>Fuel:</b> '+esc(day.fuel)+'</p>';
   if (day.tm) h += '<p class="tip"><b>Treadmill:</b> '+esc(day.tm.replace(/^Treadmill:\s*/,""))+'</p>';
